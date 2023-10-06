@@ -46,6 +46,16 @@ public class UserController {
         return ResponseEntity.ok("로그아웃 되었습니다");
     }
 
+    @PatchMapping("/withdrawal")
+    public ResponseEntity<?> withdrawal(@Valid @RequestBody Request request) {
+        ResponseEntity<?> errorResponse = validateUser(request);
+        if (errorResponse != null) return errorResponse;
+
+        userService.withdrawal(request);
+
+        return ResponseEntity.ok("회원 탈퇴가 성공적으로 되었습니다");
+    }
+
 
     // 회원 정보 검증
     public ResponseEntity<?> validateUser(Request request) {

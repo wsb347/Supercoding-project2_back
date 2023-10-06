@@ -85,4 +85,13 @@ public class UserService {
 
         return null;
     }
+
+    public void withdrawal(Request request) {
+        var existingUser = userRopository.findByEmailAndStatus(request.getEmail(), "REGISTERED");
+        if (existingUser.isPresent()) {
+            User deleteUser = existingUser.get();
+            deleteUser.setStatus("delete");
+            userRopository.save(deleteUser);
+        }
+    }
 }
