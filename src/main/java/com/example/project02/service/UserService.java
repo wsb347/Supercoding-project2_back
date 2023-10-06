@@ -5,7 +5,13 @@ import com.example.project02.entity.User;
 import com.example.project02.model.Request;
 import com.example.project02.repository.UserRopository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Formatter;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +26,7 @@ public class UserService {
 
     public void signup(Request request) {
         isValidPassword(request.getPassword());
-        request.setPassword(request.getPassword());
+        request.setPassword(sha256(request.getPassword()));
         User NewUser = userConverter.toEntity(request);
 
         userRopository.save(NewUser);
@@ -48,5 +54,35 @@ public class UserService {
         if (!hasLetter || !hasDigit) {
             throw new IllegalArgumentException("비밀번호는 영문자와 숫자의 조합이어야 합니다.");
         }
+    }
+
+    public String sha256(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            try (Formatter formatter = new Formatter()) {
+                for (byte b : hash) {
+                    formatter.format("%02x", b);
+                }
+                return formatter.toString();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "";
+        }
+    }
+
+    public User findByEmailAndPassword(String email, String password) {
+        var isUser = userRopository.findFirstByEmailAndPasswordOrderByIdDesc(email, password);
+        return isUser.orElse(null);
+    }
+
+    public ResponseEntity<?> validateUser(Request request) {
+        if (findByEmail(request.getEmail()) == null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("가입된 이메일이 아닙니다.");
+        else if (findByEmailAndPassword(request.getEmail(), request.getPassword()) == null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("잘못된 비밀번호 입니다.");
+
+        return null;
     }
 }
