@@ -40,6 +40,13 @@ public class UserController {
         return ResponseEntity.status(200).headers(headers).body("로그인되었습니다");
     }
 
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader String token) {
+        jwtTokenService.validation(token);
+        return ResponseEntity.ok("로그아웃 되었습니다");
+    }
+
+
     // 회원 정보 검증
     public ResponseEntity<?> validateUser(Request request) {
         request.setPassword(userService.sha256(request.getPassword()));

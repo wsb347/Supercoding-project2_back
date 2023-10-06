@@ -2,9 +2,11 @@ package com.example.project02.service;
 
 import com.example.project02.entity.User;
 import com.example.project02.model.Request;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,4 +56,26 @@ public class JwtTokenService {
         headers.setBearerAuth(token);
         return headers;
     }
+
+    // 토큰 검증
+    public void validation(String token){
+        var key = Keys.hmacShaKeyFor(secretkey.getBytes());
+        var paser = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build();
+
+        try {
+            var result = paser.parseClaimsJws(token);
+            for (Map.Entry<String, Object> value : result.getBody().entrySet()) {
+                log.info("key : {}, value : {}", value.getKey(), value.getValue());
+            }
+        } catch (Exception e){
+            if(e instanceof SignatureException){
+                throw new RuntimeException("잘못된 token 값입니다.");
+            } else if (e instanceof ExpiredJwtException) {
+                throw new RuntimeException("token 시간이 만료되었습니다.");
+            } else throw new RuntimeException("알 수 없는 오류가 발생했습니다.");
+        }
+    }
+
 }
