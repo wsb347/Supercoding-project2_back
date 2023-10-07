@@ -72,7 +72,7 @@ public class SmsCertificationService {
         smsCertificationDao.removeSmsCertification(requestDto.getPhone());
     }
 
-    private boolean isVerify(SmsCertification requestDto) {
+    public boolean isVerify(SmsCertification requestDto) {
         return !(smsCertificationDao.hasKey(requestDto.getPhone()) &&
             smsCertificationDao.getSmsCertification(requestDto.getPhone())
                 .equals(requestDto.getCertificationNumber()));

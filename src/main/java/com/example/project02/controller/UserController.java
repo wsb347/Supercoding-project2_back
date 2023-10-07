@@ -20,10 +20,9 @@ import java.util.Objects;
 public class UserController {
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
-    private final UserApiController userApiController;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody Request request) {
+    public ResponseEntity<?> signup(@Valid @ModelAttribute  Request request) {
         User user = userService.findByEmail(request.getEmail());
         if (user == null) {
             userService.signup(request);

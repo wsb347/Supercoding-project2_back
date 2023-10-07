@@ -2,8 +2,10 @@ package com.example.project02.service;
 
 import com.example.project02.converter.UserConverter;
 import com.example.project02.entity.User;
+import com.example.project02.entity.dto.SmsCertification;
 import com.example.project02.model.Request;
 import com.example.project02.repository.UserRepository;
+import com.example.project02.service.sms.SmsCertificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ import java.util.Formatter;
 public class UserService {
     private final UserRepository userRepository;
     UserConverter userConverter = new UserConverter();
+    private final SmsCertificationService smsCertificationService;
+
 
     public User findByEmail(String email) {
         var isUser = userRepository.findByEmail(email);
@@ -29,6 +33,10 @@ public class UserService {
         request.setPassword(sha256(request.getPassword()));
         User NewUser = userConverter.toEntity(request);
 
+        SmsCertification smsCertification = new SmsCertification(request.getPhone(), request.getCertificationNumber());
+        if (!smsCertificationService.isVerify(smsCertification)) {
+            throw new RuntimeException("SMS 인증에 실패했습니다.");
+        }
         userRepository.save(NewUser);
     }
 

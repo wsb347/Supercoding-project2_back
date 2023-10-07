@@ -1,5 +1,6 @@
 package com.example.project02.model;
 
+import com.example.project02.entity.dto.SmsCertification;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,4 +31,9 @@ public class Request {
     private String status;
 
     private String type;
+
+    private boolean verification;
+    
+    private String certificationNumber;
+
 }
