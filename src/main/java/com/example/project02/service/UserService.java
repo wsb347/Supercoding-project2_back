@@ -3,7 +3,7 @@ package com.example.project02.service;
 import com.example.project02.converter.UserConverter;
 import com.example.project02.entity.User;
 import com.example.project02.model.Request;
-import com.example.project02.repository.UserRopository;
+import com.example.project02.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +16,11 @@ import java.util.Formatter;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRopository userRopository;
+    private final UserRepository userRepository;
     UserConverter userConverter = new UserConverter();
 
     public User findByEmail(String email) {
-        var isUser = userRopository.findByEmail(email);
+        var isUser = userRepository.findByEmail(email);
         return isUser.orElse(null);
     }
 
@@ -29,7 +29,7 @@ public class UserService {
         request.setPassword(sha256(request.getPassword()));
         User NewUser = userConverter.toEntity(request);
 
-        userRopository.save(NewUser);
+        userRepository.save(NewUser);
     }
 
     // 회원가입시 비밀번호 검증
@@ -73,7 +73,7 @@ public class UserService {
     }
 
     public User findByEmailAndPassword(String email, String password) {
-        var isUser = userRopository.findFirstByEmailAndPasswordOrderByIdDesc(email, password);
+        var isUser = userRepository.findFirstByEmailAndPasswordOrderByIdDesc(email, password);
         return isUser.orElse(null);
     }
 
@@ -87,11 +87,11 @@ public class UserService {
     }
 
     public void withdrawal(Request request) {
-        var existingUser = userRopository.findByEmailAndStatus(request.getEmail(), "REGISTERED");
+        var existingUser = userRepository.findByEmailAndStatus(request.getEmail(), "REGISTERED");
         if (existingUser.isPresent()) {
             User deleteUser = existingUser.get();
             deleteUser.setStatus("delete");
-            userRopository.save(deleteUser);
+            userRepository.save(deleteUser);
         }
     }
 }

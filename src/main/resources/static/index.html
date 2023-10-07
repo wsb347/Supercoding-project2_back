@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 및 SMS 인증</title>
+</head>
+<body>
+    <h1>SMS 인증 테스트</h1>
+    <form id="smsSendForm">
+        <label for="phone">전화번호:</label>
+        <input type="tel" id="phone" name="phone" required><br><br>
+        <button type="button" onclick="sendSms()">인증번호 전송</button>
+    </form><br><br>
+
+    <form id="smsVerifyForm">
+        <label for="smsCode">인증번호:</label>
+        <input type="text" id="smsCode" name="smsCode" required><br><br>
+        <button type="button" onclick="verifySms()">인증번호 확인</button>
+    </form>
+
+    <script>
+        async function sendSms() {
+            const phone = document.getElementById('phone').value;
+            try {
+                const response = await fetch('http://localhost:8080/sms-certification/sends', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({phone})
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function verifySms() {
+            const phone = document.getElementById('phone').value;
+            const smsCode = document.getElementById('smsCode').value;
+            try {
+                const response = await fetch('http://localhost:8080/sms-certification/confirms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({phone, certificationNumber: smsCode})
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -38,6 +38,16 @@ dependencies {
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+	// SMS
+	implementation 'net.nurigo:sdk:4.2.7'
+	implementation 'net.nurigo:javaSDK:2.2'
+	implementation 'org.springframework.session:spring-session-data-redis:2.4.2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-json'
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
+
 }
 
 tasks.named('test') {
