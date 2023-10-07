@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @CrossOrigin(origins = "*")
@@ -22,40 +24,50 @@ public class UserController {
     private final JwtTokenService jwtTokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Valid @ModelAttribute  Request request) {
+    public ResponseEntity<Map<String, Object>> signup(@Valid @ModelAttribute Request request) {
+        Map<String, Object> response = new HashMap<>();
+
         User user = userService.findByEmail(request.getEmail());
         if (user == null) {
             userService.signup(request);
 
-
-            return ResponseEntity.ok("회원가입이 성공적으로 되었습니다.");
+            response.put("status", "success");
+            response.put("message", "회원가입이 성공적으로 되었습니다.");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("status", "error");
+            response.put("message", "이미 가입된 정보입니다.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이미 가입된 정보입니다.");
     }
 
     @GetMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody Request request) {
         ResponseEntity<?> errorResponse = validateUser(request);
         if (errorResponse != null) return errorResponse;
-
         HttpHeaders headers = jwtTokenService.createToken(request);
-        return ResponseEntity.status(200).headers(headers).body("로그인되었습니다");
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("message", "로그인되었습니다.");
+        return ResponseEntity.status(200).headers(headers).body(responseBody);
+
     }
 
     @GetMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader String token) {
         jwtTokenService.validation(token);
-        return ResponseEntity.ok("로그아웃 되었습니다");
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("message", "로그아웃되었습니다.");
+        return ResponseEntity.status(200).body(responseBody);
     }
 
     @PatchMapping("/withdrawal")
     public ResponseEntity<?> withdrawal(@Valid @RequestBody Request request) {
         ResponseEntity<?> errorResponse = validateUser(request);
         if (errorResponse != null) return errorResponse;
-
         userService.withdrawal(request);
-
-        return ResponseEntity.ok("회원 탈퇴가 성공적으로 되었습니다");
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("message", "회원 탈퇴가 성공적으로 되었습니다.");
+        return ResponseEntity.status(200).body(responseBody);
     }
 
 
@@ -63,10 +75,15 @@ public class UserController {
     public ResponseEntity<?> validateUser(Request request) {
         request.setPassword(userService.sha256(request.getPassword()));
         User user = userService.findByEmailAndPassword(request.getEmail(), request.getPassword());
-        if (user == null){
+        Map<String, String> responseBody = new HashMap<>();
+
+        if (user == null) {
             return userService.validateUser(request);
-        } else if (Objects.equals(user.getStatus(), "delete"))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("유효한 회원이 아닙니다.");
-        return null;
+        } else if (Objects.equals(user.getStatus(), "delete")) {
+            responseBody.put("error", "유효한 회원이 아닙니다.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
+        }
+        responseBody.put("message", "유효한 사용자입니다.");
+        return ResponseEntity.ok(responseBody);
     }
 }

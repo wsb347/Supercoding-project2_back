@@ -17,7 +17,7 @@ public class SmsCertificationDao {
 
     public void createSmsCertification(String phone, String certificationNumber) { //(3)
         stringRedisTemplate.opsForValue()
-            .set(PREFIX + phone, certificationNumber, Duration.ofSeconds(LIMIT_TIME));
+                .set(PREFIX + phone, certificationNumber, Duration.ofSeconds(LIMIT_TIME));
     }
 
     public String getSmsCertification(String phone) { // (4)

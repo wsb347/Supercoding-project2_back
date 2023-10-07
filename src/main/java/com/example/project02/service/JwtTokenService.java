@@ -27,14 +27,14 @@ public class JwtTokenService {
     private final UserService userService;
 
     @Value("${jwt.secret}")
-    private String secretkey;
+    private String secretKey;
 
     @Value("${access-token.plus-hour}")
     private long plusHour;
 
     // 토큰값 생성
     public String create(Map<String, Object> claims){
-        var key = Keys.hmacShaKeyFor(secretkey.getBytes());
+        var key = Keys.hmacShaKeyFor(secretKey.getBytes());
         LocalDateTime expireAt = LocalDateTime.now().plusHours(plusHour);
         var _expireAt = Date.from(expireAt.atZone(ZoneId.systemDefault()).toInstant());
 
@@ -59,13 +59,13 @@ public class JwtTokenService {
 
     // 토큰 검증
     public void validation(String token){
-        var key = Keys.hmacShaKeyFor(secretkey.getBytes());
-        var paser = Jwts.parserBuilder()
+        var key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        var parser = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build();
 
         try {
-            var result = paser.parseClaimsJws(token);
+            var result = parser.parseClaimsJws(token);
             for (Map.Entry<String, Object> value : result.getBody().entrySet()) {
                 log.info("key : {}, value : {}", value.getKey(), value.getValue());
             }

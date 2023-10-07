@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -86,12 +88,18 @@ public class UserService {
     }
 
     public ResponseEntity<?> validateUser(Request request) {
-        if (findByEmail(request.getEmail()) == null)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("가입된 이메일이 아닙니다.");
-        else if (findByEmailAndPassword(request.getEmail(), request.getPassword()) == null)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("잘못된 비밀번호 입니다.");
+        Map<String, String> responseBody = new HashMap<>();
 
-        return null;
+        if (findByEmail(request.getEmail()) == null) {
+            responseBody.put("error", "가입된 이메일이 아닙니다.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
+        } else if (findByEmailAndPassword(request.getEmail(), request.getPassword()) == null) {
+            responseBody.put("error", "잘못된 비밀번호 입니다.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
+        }
+
+        // 필요하다면 이 부분에서 다른 정보나 메시지를 반환할 수 있습니다.
+        return ResponseEntity.ok(responseBody);  // 현재는 빈 응답을 반환하고 있습니다.
     }
 
     public void withdrawal(Request request) {

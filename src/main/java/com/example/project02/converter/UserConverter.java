@@ -18,16 +18,5 @@ public class UserConverter {
                 .build();
     }
 
-    public User toEntityAdim(Request response) {
-        return User.builder()
-                .email(response.getEmail())
-                .address(response.getAddress())
-                .phone(response.getPhone())
-                .password(response.getPassword())
-                .status("REGISTERED")
-                .gender(response.getGender())
-                .type("Admin")
-                .build();
-    }
 
 }
