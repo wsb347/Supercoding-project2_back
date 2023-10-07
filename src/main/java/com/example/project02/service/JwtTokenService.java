@@ -26,10 +26,10 @@ public class JwtTokenService {
 
     private final UserService userService;
 
-    @Value("${jwt.secret}")
+    @Value("${jwt.secretKey}")
     private String secretKey;
 
-    @Value("${access-token.plus-hour}")
+    @Value("${jwt.accessPlusHour}")
     private long plusHour;
 
     // 토큰값 생성
