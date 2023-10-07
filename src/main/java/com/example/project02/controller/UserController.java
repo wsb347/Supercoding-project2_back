@@ -24,7 +24,7 @@ public class UserController {
     private final JwtTokenService jwtTokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, Object>> signup(@Valid @ModelAttribute Request request) {
+    public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody Request request) {
         Map<String, Object> response = new HashMap<>();
 
         User user = userService.findByEmail(request.getEmail());
@@ -83,7 +83,6 @@ public class UserController {
             responseBody.put("error", "유효한 회원이 아닙니다.");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
         }
-        responseBody.put("message", "유효한 사용자입니다.");
-        return ResponseEntity.ok(responseBody);
+        return null;
     }
 }
