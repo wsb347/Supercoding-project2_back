@@ -29,7 +29,7 @@ public class Request {
 
     private String status;
 
-    private String type;
+    private String img;
 
     private boolean verification;
 

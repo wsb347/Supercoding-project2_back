@@ -31,7 +31,5 @@ public class User {
 
     private String status;
 
-    @Column(length = 10, nullable = false)
-    private String type;
-
+    private String img;
 }
