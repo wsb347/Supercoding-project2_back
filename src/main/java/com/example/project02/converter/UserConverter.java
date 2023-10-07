@@ -1,7 +1,7 @@
 package com.example.project02.converter;
 
 import com.example.project02.entity.User;
-import com.example.project02.model.Request;
+import com.example.project02.dto.Request;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

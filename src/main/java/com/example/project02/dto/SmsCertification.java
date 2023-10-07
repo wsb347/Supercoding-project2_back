@@ -1,4 +1,4 @@
-package com.example.project02.entity.dto;
+package com.example.project02.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

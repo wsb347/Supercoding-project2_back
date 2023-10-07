@@ -2,8 +2,8 @@ package com.example.project02.service;
 
 import com.example.project02.converter.UserConverter;
 import com.example.project02.entity.User;
-import com.example.project02.entity.dto.SmsCertification;
-import com.example.project02.model.Request;
+import com.example.project02.dto.SmsCertification;
+import com.example.project02.dto.Request;
 import com.example.project02.repository.UserRepository;
 import com.example.project02.service.sms.SmsCertificationService;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.project02.model;
+package com.example.project02.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -8,7 +8,7 @@ import java.time.Duration;
 
 @RequiredArgsConstructor
 @Repository
-public class SmsCertificationDao {
+public class SmsCertification {
 
     private final String PREFIX = "sms:";
     private final int LIMIT_TIME = 3 * 60;

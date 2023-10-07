@@ -1,7 +1,7 @@
 package com.example.project02.controller;
 
 import com.example.project02.entity.User;
-import com.example.project02.model.Request;
+import com.example.project02.dto.Request;
 import com.example.project02.service.JwtTokenService;
 import com.example.project02.service.UserService;
 import lombok.RequiredArgsConstructor;

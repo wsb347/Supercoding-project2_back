@@ -1,7 +1,7 @@
 package com.example.project02.service;
 
 import com.example.project02.entity.User;
-import com.example.project02.model.Request;
+import com.example.project02.dto.Request;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -1,6 +1,6 @@
 package com.example.project02.controller;
 
-import com.example.project02.entity.dto.SmsCertification;
+import com.example.project02.dto.SmsCertification;
 import com.example.project02.service.sms.SmsCertificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
