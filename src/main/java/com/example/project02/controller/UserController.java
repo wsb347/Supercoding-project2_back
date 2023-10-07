@@ -20,12 +20,15 @@ import java.util.Objects;
 public class UserController {
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
+    private final UserApiController userApiController;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody Request request) {
         User user = userService.findByEmail(request.getEmail());
         if (user == null) {
             userService.signup(request);
+
+
             return ResponseEntity.ok("회원가입이 성공적으로 되었습니다.");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이미 가입된 정보입니다.");

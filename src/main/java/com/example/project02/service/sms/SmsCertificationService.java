@@ -1,20 +1,17 @@
 package com.example.project02.service.sms;
 
-import com.example.project02.entity.User;
+import com.example.project02.entity.dto.SmsCertification;
 import com.example.project02.exception.AuthenticationNumberMismatchException;
 import com.example.project02.model.SmsCertificationDao;
 import com.example.project02.properties.AppProperties;
-import kotlinx.datetime.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -30,10 +27,10 @@ public class SmsCertificationService {
 
     private DefaultMessageService messageService;
 
-    @PostConstruct
-    public void init() {
-        this.messageService = NurigoApp.INSTANCE.initialize(appProperties.getCoolSmsKey(), appProperties.getCoolSmsSecret(), "https://api.coolsms.co.kr");
-    }
+//    @PostConstruct
+//    public void init() {
+//        this.messageService = NurigoApp.INSTANCE.initialize(appProperties.getCoolSmsKey(), appProperties.getCoolSmsSecret(), "https://api.coolsms.co.kr");
+//    }
     public String makeRandomNumber() {
         return String.format("%04d", new Random().nextInt(10000));
     }
@@ -68,14 +65,14 @@ public class SmsCertificationService {
     }
 
 
-    public void verifySms(User.SmsCertificationRequest requestDto) {
+    public void verifySms(SmsCertification requestDto) {
         if (isVerify(requestDto)) {
             throw new AuthenticationNumberMismatchException("인증번호가 일치하지 않습니다.");
         }
         smsCertificationDao.removeSmsCertification(requestDto.getPhone());
     }
 
-    private boolean isVerify(User.SmsCertificationRequest requestDto) {
+    private boolean isVerify(SmsCertification requestDto) {
         return !(smsCertificationDao.hasKey(requestDto.getPhone()) &&
             smsCertificationDao.getSmsCertification(requestDto.getPhone())
                 .equals(requestDto.getCertificationNumber()));
