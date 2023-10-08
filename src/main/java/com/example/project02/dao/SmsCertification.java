@@ -1,4 +1,4 @@
-package com.example.project02.model;
+package com.example.project02.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -8,7 +8,7 @@ import java.time.Duration;
 
 @RequiredArgsConstructor
 @Repository
-public class SmsCertificationDao {
+public class SmsCertification {
 
     private final String PREFIX = "sms:";
     private final int LIMIT_TIME = 3 * 60;
@@ -17,7 +17,7 @@ public class SmsCertificationDao {
 
     public void createSmsCertification(String phone, String certificationNumber) { //(3)
         stringRedisTemplate.opsForValue()
-            .set(PREFIX + phone, certificationNumber, Duration.ofSeconds(LIMIT_TIME));
+                .set(PREFIX + phone, certificationNumber, Duration.ofSeconds(LIMIT_TIME));
     }
 
     public String getSmsCertification(String phone) { // (4)

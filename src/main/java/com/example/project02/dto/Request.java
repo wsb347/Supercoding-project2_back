@@ -1,4 +1,4 @@
-package com.example.project02.model;
+package com.example.project02.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +29,10 @@ public class Request {
 
     private String status;
 
-    private String type;
+    private String img;
+
+    private boolean verification;
+
+    private String certificationNumber;
+
 }

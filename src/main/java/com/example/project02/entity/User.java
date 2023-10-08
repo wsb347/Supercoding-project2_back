@@ -31,23 +31,5 @@ public class User {
 
     private String status;
 
-    @Column(length = 10, nullable = false)
-    private String type;
-
-
-    @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class SmsCertificationRequest {
-
-        private String phone;
-        private String certificationNumber;
-
-        @Builder
-        public SmsCertificationRequest(String phone, String certificationNumber) {
-            this.phone = phone;
-            this.certificationNumber = certificationNumber;
-        }
-
-    }
-
+    private String img;
 }

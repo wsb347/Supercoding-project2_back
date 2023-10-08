@@ -11,6 +11,10 @@
 *.db-shm
 *.db-wal
 
+/src/main/resources/application-jwt.properties
+/src/main/resources/application-app.properties
+/src/main/resources/application-redis.properties
+/src/main/resources/application-db.properties
 
 ### Eclipse ###
 .metadata
