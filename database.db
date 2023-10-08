@@ -17,7 +17,7 @@ CREATE TABLE `user` (
 
 CREATE TABLE `user_profile` (
 	`id` BIGINT	NOT NULL, #유저아이디
-	`aboutMe` BIGINT, #소개글
+	`about_me` BIGINT, #소개글
 	`img` varchar(100), #프로필사진
 	`address` varchar(100), #주소
     FOREIGN KEY (id) REFERENCES `user`(id)
