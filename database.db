@@ -75,7 +75,7 @@ CREATE TABLE `payment` (
 );
 
 CREATE TABLE `order_detail` (
-	`order_detial_id` Integer auto_increment primary key, #주문상세번호
+	`order_detail_id` Integer auto_increment primary key, #주문상세번호
 	`order_id` BIGINT NOT NULL, #주문번호
 	`product_id` BIGINT NOT NULL, #상품번호
 	`amount` Integer, #수량
