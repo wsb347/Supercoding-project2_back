@@ -14,7 +14,7 @@ public class UserConverter {
                 .password(response.getPassword())
                 .status("REGISTERED")
                 .gender(response.getGender())
-                .img("https://www.pngkey.com/png/detail/121-1219231_user-default-profile.png")
+                .img("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
                 .build();
     }
 
