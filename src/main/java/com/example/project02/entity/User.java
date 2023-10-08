@@ -3,6 +3,8 @@ package com.example.project02.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "`user`")
@@ -33,6 +35,12 @@ public class User {
 
     @Column(length = 10, nullable = false)
     private String type;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Cart cart;
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
 
 
     @Getter
