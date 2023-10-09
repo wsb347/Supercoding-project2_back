@@ -35,6 +35,7 @@ public class CartProduct {
             cartProduct.setCart(cart);
             cartProduct.setProduct(product);
             cartProduct.setCount(amount);
+            cartProduct.setPrice(product);
             return cartProduct;
         }
     }

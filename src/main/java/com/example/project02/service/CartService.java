@@ -5,7 +5,7 @@ import com.example.project02.entity.CartProduct;
 import com.example.project02.entity.Product;
 import com.example.project02.entity.User;
 import com.example.project02.exception.OutOfStockException;
-import com.example.project02.model.CartRequest;
+import com.example.project02.dto.CartRequest;
 import com.example.project02.repository.CartProductRepository;
 import com.example.project02.repository.CartRepository;
 import com.example.project02.repository.ProductRepository;
@@ -25,7 +25,7 @@ public class CartService {
     @Transactional
     public void addProduct(Long userId, CartRequest request) {
 
-        Cart cart = this.cartRepository.findByUserId(userId);
+        Cart cart = cartRepository.findByUserId(userId);
 
         User user = userRepository.findById(userId).orElseThrow(() ->
             new RuntimeException("가입되지 않은 정보입니다."));
@@ -35,34 +35,37 @@ public class CartService {
 
         if (product.getStockQuantity() < request.getQuantity()) {
             throw new OutOfStockException("재고 부족");
-        } else {
-            if (cart == null) {
-                cart = Cart.createCart(user);
-                cartRepository.save(cart);
-            }
-
-            CartProduct cartProduct = this.cartProductRepository.findByCartIdAndProductId(cart.getId(), product.getId());
-            if (cartProduct == null) {
-                cartProduct = CartProduct.createCartProduct(cart, product, request.getQuantity());
-                this.cartProductRepository.save(cartProduct);
-            } else {
-                cartProduct.setCart(cartProduct.getCart());
-                cartProduct.setProduct(cartProduct.getProduct());
-                cartProduct.addCount(request.getQuantity());
-                cartProduct.setCount(cartProduct.getCount());
-                this.cartProductRepository.save(cartProduct);
-            }
-
-            cart.setCount(cart.getCount() + request.getQuantity());
-            cartProduct.setPrice(product);
-
-            Integer count = this.cartProductRepository.findCount(user.getId(), product.getId());
-
-            if (count < request.getQuantity()) {
-                throw new OutOfStockException("재고 부족");
-            }
         }
+
+        if(request.getQuantity() <= 0){
+            throw new RuntimeException("최소 1개 이상 입력하십시오.");
+        }
+
+        if (cart == null) {
+            cart = Cart.createCart(user);
+            cartRepository.save(cart);
+        }
+
+        CartProduct cartProduct = cartProductRepository.findByCartIdAndProductId(cart.getId(), product.getId());
+        if (cartProduct == null) {
+            cartProduct = CartProduct.createCartProduct(cart, product, request.getQuantity());
+
+            cartProductRepository.save(cartProduct);
+
+        } else {
+            cartProduct.setCart(cartProduct.getCart());
+            cartProduct.setProduct(cartProduct.getProduct());
+            cartProduct.setCount(cartProduct.getCount());
+            cartProduct.addCount(request.getQuantity());
+            cartProduct.setPrice(product);
+            cartProductRepository.save(cartProduct);
+        }
+
+        cart.setTotalCount(cart.getTotalCount() + request.getQuantity());
+        Double totalPrice = cartRepository.calculateTotalPriceByCartId(cart.getId());
+        cart.setTotalPrice(totalPrice);
     }
-
-
 }
+
+
+

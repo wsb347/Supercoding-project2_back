@@ -1,7 +1,7 @@
 package com.example.project02.controller;
 
 import com.example.project02.entity.Product;
-import com.example.project02.model.CartRequest;
+import com.example.project02.dto.CartRequest;
 import com.example.project02.repository.ProductRepository;
 import com.example.project02.service.CartService;
 import java.util.HashMap;
@@ -10,22 +10,17 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping({"/api/users"})
+@RequestMapping("/api/users")
 public class CartController {
 
     private final CartService cartService;
     private final ProductRepository productRepository;
 
-    @PostMapping({"/{userId}/cart/products"})
+    @PostMapping("/{userId}/cart/products")
     public ResponseEntity<Map<String, String>> addProductToCart(@PathVariable("userId") Long userId, @RequestBody CartRequest request) {
 
         cartService.addProduct(userId, request);
@@ -35,7 +30,7 @@ public class CartController {
 
         String description = String.format("%s가 %d개 장바구니에 추가되었습니다.", product.getName(), request.getQuantity());
         Map<String, String> response  = new HashMap<>();
-        response.put("Description", description);
+        response.put("message", description);
 
         return ResponseEntity.ok().body(response);
     }

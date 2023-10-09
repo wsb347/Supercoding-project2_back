@@ -20,7 +20,7 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -30,9 +30,9 @@ public class Order {
     private LocalDateTime orderDate;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderProduct> orderProducts = new ArrayList();
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Payment payment;
 
     public void setUser(User user) {
@@ -41,7 +41,7 @@ public class Order {
     }
 
     public void addOrderProduct(OrderProduct orderProduct) {
-        this.orderProducts.add(orderProduct);
+        orderProducts.add(orderProduct);
         orderProduct.setOrder(this);
     }
 

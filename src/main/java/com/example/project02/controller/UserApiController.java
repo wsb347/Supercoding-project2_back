@@ -1,6 +1,6 @@
 package com.example.project02.controller;
 
-import com.example.project02.entity.User;
+import com.example.project02.dto.SmsCertification;
 import com.example.project02.service.sms.SmsCertificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class UserApiController {
     }
 
     @PostMapping("/sms-certification/sends")
-    public ResponseEntity<Map<String, Object>> sendSms(@RequestBody User.SmsCertificationRequest requestDto) {
+    public ResponseEntity<Map<String, Object>> sendSms(@RequestBody SmsCertification requestDto) {
         smsCertificationService.sendSms(requestDto.getPhone());
         Map<String, Object> response = new HashMap<>();
         response.put("status", "success");
@@ -34,12 +34,12 @@ public class UserApiController {
 
 
     @PostMapping("/sms-certification/confirms")
-    public ResponseEntity<Map<String, Object>> verifySms(@RequestBody User.SmsCertificationRequest requestDto) {
+    public ResponseEntity<Map<String, Object>> verifySms(@RequestBody SmsCertification requestDto) {
         smsCertificationService.verifySms(requestDto);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "success");
         response.put("message", "SMS verified successfully");
         return ResponseEntity.ok(response);
-}
+    }
 
 }
