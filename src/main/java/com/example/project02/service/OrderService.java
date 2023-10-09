@@ -33,7 +33,7 @@ public class OrderService {
             Product product = cartProduct.getProduct();
 
             double price = product.getPrice();
-            int amount = cartProduct.getCount();
+            int amount = cartProduct.getAmount();
 
             OrderProduct orderProduct = OrderProduct.createOrderProduct(product, price, amount);
 

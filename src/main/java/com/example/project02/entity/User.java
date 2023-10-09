@@ -33,9 +33,6 @@ public class User {
 
     private String status;
 
-    @Column(length = 10, nullable = false)
-    private String type;
-
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Cart cart;
 
@@ -43,4 +40,7 @@ public class User {
     private List<Order> orders = new ArrayList<>();
 
     private String img;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserProfile> userProfile = new ArrayList<>();
 }

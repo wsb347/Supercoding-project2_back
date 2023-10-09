@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
@@ -22,6 +23,20 @@ public class Product {
     private double price;
 
     private Integer stockQuantity;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    private LocalDateTime registerDate;
+
+    private LocalDateTime fieldPredictedSaleEndDate;
+
+    private String img1;
+
+    private String img2;
+
+    private String img3;
 
     public void removeStock(int quantity) {
         int stock = stockQuantity - quantity;

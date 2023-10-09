@@ -23,7 +23,7 @@ public class CartProduct {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private int count;
+    private int amount;
 
     private double price;
 
@@ -34,18 +34,18 @@ public class CartProduct {
             CartProduct cartProduct = new CartProduct();
             cartProduct.setCart(cart);
             cartProduct.setProduct(product);
-            cartProduct.setCount(amount);
+            cartProduct.setAmount(amount);
             cartProduct.setPrice(product);
             return cartProduct;
         }
     }
 
     public void addCount(int count) {
-        this.count += count;
+        this.amount += count;
     }
 
     public void setPrice(Product product) {
-        price = count * product.getPrice();
+        price = amount * product.getPrice();
     }
 
 

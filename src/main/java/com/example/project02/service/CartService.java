@@ -55,7 +55,7 @@ public class CartService {
         } else {
             cartProduct.setCart(cartProduct.getCart());
             cartProduct.setProduct(cartProduct.getProduct());
-            cartProduct.setCount(cartProduct.getCount());
+            cartProduct.setAmount(cartProduct.getAmount());
             cartProduct.addCount(request.getQuantity());
             cartProduct.setPrice(product);
             cartProductRepository.save(cartProduct);
