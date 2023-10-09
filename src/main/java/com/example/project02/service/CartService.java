@@ -1,5 +1,6 @@
 package com.example.project02.service;
 
+import com.example.project02.dto.ChangeAmountRequest;
 import com.example.project02.entity.Cart;
 import com.example.project02.entity.CartProduct;
 import com.example.project02.entity.Product;
@@ -62,6 +63,51 @@ public class CartService {
         }
 
         cart.setTotalCount(cart.getTotalCount() + request.getQuantity());
+        Double totalPrice = cartRepository.calculateTotalPriceByCartId(cart.getId());
+        cart.setTotalPrice(totalPrice);
+    }
+
+    @Transactional
+    public void changeProductAmount(Long userId, ChangeAmountRequest request) {
+
+        Cart cart = cartRepository.findByUserId(userId);
+
+        Long cartId = cart.getId();
+
+        Long cartProductId = request.getCartProductId();
+        int amount = request.getAmount();
+
+        CartProduct cartProduct = cartProductRepository.findByIdAndCartId(cartProductId, cartId);
+
+        if (cartProduct == null) {
+            throw new RuntimeException("조회되지 않습니다.");
+        }
+
+        Product product = cartProductRepository.findProduct(cartProduct.getId(), cartId);
+
+        if (product.getStockQuantity() < request.getAmount()) {
+            throw new OutOfStockException("재고 부족");
+        }
+
+        int findAmount = cartProduct.getAmount();
+
+        if (findAmount == amount) {
+            throw new RuntimeException("이미 담겨 있는 수량과 변경하려는 수량이 같습니다");
+        }
+
+        if (amount <= 0) {
+            throw new RuntimeException("수량을 다시 입력해주세요");
+        }
+
+
+        cartProduct.setAmount(amount);
+
+        double price = product.getPrice();
+        cartProduct.setPrice(amount * price);
+
+        int totalAmount = cartRepository.calculateTotalAmountByCartId(cart.getId());
+        cart.setTotalCount(totalAmount);
+
         Double totalPrice = cartRepository.calculateTotalPriceByCartId(cart.getId());
         cart.setTotalPrice(totalPrice);
     }

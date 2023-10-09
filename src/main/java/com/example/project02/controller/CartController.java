@@ -1,5 +1,6 @@
 package com.example.project02.controller;
 
+import com.example.project02.dto.ChangeAmountRequest;
 import com.example.project02.entity.Product;
 import com.example.project02.dto.CartRequest;
 import com.example.project02.repository.ProductRepository;
@@ -25,8 +26,8 @@ public class CartController {
 
         cartService.addProduct(userId, request);
 
-        Product product = productRepository.findById(request.getProductId()).orElseThrow(() ->
-             new RuntimeException("등록되지 않은 상품입니다."));
+        Product product = productRepository.findById(request.getProductId())
+                .orElseThrow(() -> new RuntimeException("등록되지 않은 상품입니다."));
 
         String description = String.format("%s가 %d개 장바구니에 추가되었습니다.", product.getName(), request.getQuantity());
         Map<String, String> response  = new HashMap<>();
@@ -34,6 +35,15 @@ public class CartController {
 
         return ResponseEntity.ok().body(response);
     }
+
+    @PutMapping("/{userId}/cart/products")
+    public ResponseEntity<String> changeProduct(@PathVariable("userId")Long userId, @RequestBody ChangeAmountRequest request) {
+        cartService.changeProductAmount(userId, request);
+
+        return ResponseEntity.ok().body("변경되었습니다.");
+    }
+
+
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
