@@ -25,7 +25,7 @@ public class Order {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus Status;
+    private OrderStatus orderStatus;
 
     private LocalDateTime orderDate;
 
@@ -48,7 +48,7 @@ public class Order {
     public static Order createOrder(User user, OrderProduct... orderProducts) {
         Order order = new Order();
         order.setUser(user);
-        order.setStatus(OrderStatus.ORDER);
+        order.setOrderStatus(OrderStatus.ORDER);
 
         for (OrderProduct orderProduct : orderProducts) {
             order.addOrderProduct(orderProduct);
