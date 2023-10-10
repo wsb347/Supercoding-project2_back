@@ -6,10 +6,11 @@ use project02;
 
 CREATE TABLE `user` (
 	`id` BIGINT	auto_increment primary key, #유저아이디
+    `name` varchar(10) not null, #이름
 	`email` varchar(45) NOT NULL, #이메일
 	`password` varchar(100) NOT NULL, #비밀번호
 	`phone` varchar(15) NOT NULL, #전화번호
-	`address` varchar(100), #주소
+	`address` varchar(600), #주소
 	`gender` varchar(10), #성별
 	`status` varchar(45) NOT NULL	DEFAULT 'REGISTERED', #상태
 	`img` varchar(100) default 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' #프로필사진
@@ -84,10 +85,3 @@ CREATE TABLE `order_product` (
     FOREIGN KEY (order_id) REFERENCES `orders`(order_id),
 	FOREIGN KEY (product_id) REFERENCES `product`(product_id)
 );
-
-
-
-
-
-
-
