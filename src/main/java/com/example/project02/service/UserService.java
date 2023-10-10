@@ -33,6 +33,7 @@ public class UserService {
     public void signup(UserRequest userRequest) {
         isValidPassword(userRequest.getPassword());
         userRequest.setPassword(sha256(userRequest.getPassword()));
+        userRequest.setAddress(userRequest.getAddress() + " " + userRequest.getDetailedAddress());
         User NewUser = userConverter.toEntity(userRequest);
 
         SmsCertification smsCertification = new SmsCertification(userRequest.getPhone(), userRequest.getCertificationNumber());
@@ -98,8 +99,7 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
         }
 
-        // 필요하다면 이 부분에서 다른 정보나 메시지를 반환할 수 있습니다.
-        return ResponseEntity.ok(responseBody);  // 현재는 빈 응답을 반환하고 있습니다.
+        return ResponseEntity.ok(responseBody);
     }
 
     public void withdrawal(UserRequest userRequest) {

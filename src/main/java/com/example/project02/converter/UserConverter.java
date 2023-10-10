@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public class UserConverter {
     public User toEntity(UserRequest response) {
         return User.builder()
+                .name(response.getName())
                 .email(response.getEmail())
                 .address(response.getAddress())
                 .phone(response.getPhone())

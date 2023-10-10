@@ -15,6 +15,9 @@ import javax.validation.constraints.NotBlank;
 public class UserRequest {
 
     @NotBlank
+    private String name;
+
+    @NotBlank
     @Email
     private String email;
 
@@ -24,6 +27,8 @@ public class UserRequest {
     private String phone;
 
     private String address;
+
+    private String detailedAddress;
 
     private String gender;
 
