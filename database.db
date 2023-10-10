@@ -1,4 +1,4 @@
-#drop database project02;
+drop database project02;
 
 create database project02;
 
@@ -24,16 +24,16 @@ CREATE TABLE `user_profile` (
 );
 
 CREATE TABLE `category` (
-	`category_id` Integer auto_increment primary KEY, #카테고리 고유번호
+	`category_id` BIGINT auto_increment primary KEY, #카테고리 고유번호
 	`name` VARCHAR(30) NOT NULL #카테고리명
 );
 
 CREATE TABLE `product` (
 	`product_id` BIGINT auto_increment primary KEY, #상품번호
-	`category_id` Integer NOT NULL, #카테고리 고유번호
+	`category_id` BIGINT NOT NULL, #카테고리 고유번호
 	`product_name` VARCHAR(20), #상품명
-	`price` BIGINT, #가격
-	`stock_quantity` Integer, #재고수량
+	`price` double, #가격
+	`stock_quantity` Integer, #재고수량product
 	`register_date` TIMESTAMP NOT NULL default CURRENT_TIMESTAMP, #등록일
 	`field_predicted_sale_enddate` TIMESTAMP NOT NULL, #예상판매 종료날짜
 	`img1` VARCHAR(600), #이미지1
@@ -45,7 +45,8 @@ CREATE TABLE `product` (
 CREATE TABLE `cart` (
 	`cart_id` BIGINT auto_increment primary KEY, #장바구니번호
 	`user_id` BIGINT NOT NULL, #유저번호
-	`amount` Integer, #수량
+	`total_count` int, #총 수량
+    `total_price` double, #총 가격
     FOREIGN KEY (user_id) REFERENCES `user`(id)
 );
 
@@ -53,13 +54,13 @@ CREATE TABLE `cart_product` (
 	`cart_product_id` BIGINT auto_increment primary KEY, #장바구니 상품번호
 	`cart_id` BIGINT NOT NULL, #장바구니 번호
 	`product_id` BIGINT NOT NULL, #상품번호
-	`amount` Integer, #수량
+	`amount` int, #수량
 	`price` double, #가격
     FOREIGN KEY (product_id) REFERENCES product(product_id),
 	FOREIGN KEY (cart_id) REFERENCES cart(cart_id)
 );
 
-CREATE TABLE `order` (
+CREATE TABLE `orders` (
 	`order_id` BIGINT auto_increment primary KEY, #주문번호
 	`user_id` BIGINT NOT NULL , #유저아이디
 	`order_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, #주문일자
@@ -71,16 +72,16 @@ CREATE TABLE `payment` (
 	`payment_id` BIGINT auto_increment primary key, #결제번호
 	`order_id` BIGINT NOT NULL, #주문번호
 	`address` varchar(100), #주소
-    FOREIGN KEY (order_id) REFERENCES `order` (order_id)
+    FOREIGN KEY (order_id) REFERENCES `orders` (order_id)
 );
 
-CREATE TABLE `order_detail` (
-	`order_detail_id` Integer auto_increment primary key, #주문상세번호
+CREATE TABLE `order_product` (
+	`order_detail_id` BIGINT auto_increment primary key, #주문상세번호
 	`order_id` BIGINT NOT NULL, #주문번호
 	`product_id` BIGINT NOT NULL, #상품번호
-	`amount` Integer, #수량
+	`count` int, #수량
 	`price` double, #가격
-    FOREIGN KEY (order_id) REFERENCES `order`(order_id),
+    FOREIGN KEY (order_id) REFERENCES `orders`(order_id),
 	FOREIGN KEY (product_id) REFERENCES `product`(product_id)
 );
 
