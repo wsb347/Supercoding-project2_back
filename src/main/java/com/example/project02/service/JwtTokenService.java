@@ -1,7 +1,7 @@
 package com.example.project02.service;
 
 import com.example.project02.entity.User;
-import com.example.project02.dto.Request;
+import com.example.project02.dto.UserRequest;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -47,8 +47,8 @@ public class JwtTokenService {
 
 
     // 생성한 코드 로그인 시 넘겨줌
-    public HttpHeaders createToken(Request request) {
-        User user = userService.findByEmail(request.getEmail());
+    public HttpHeaders createToken(UserRequest userRequest) {
+        User user = userService.findByEmail(userRequest.getEmail());
         var claims = new HashMap<String, Object>();
         claims.put("user_id", user.getId());
         String token = create(claims);

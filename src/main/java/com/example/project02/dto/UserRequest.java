@@ -12,7 +12,10 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
-public class Request {
+public class UserRequest {
+
+    @NotBlank
+    private String name;
 
     @NotBlank
     @Email
@@ -24,6 +27,8 @@ public class Request {
     private String phone;
 
     private String address;
+
+    private String detailedAddress;
 
     private String gender;
 
