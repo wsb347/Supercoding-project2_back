@@ -1,12 +1,12 @@
 package com.example.project02.converter;
 
 import com.example.project02.entity.User;
-import com.example.project02.dto.Request;
+import com.example.project02.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class UserConverter {
-    public User toEntity(Request response) {
+    public User toEntity(UserRequest response) {
         return User.builder()
                 .email(response.getEmail())
                 .address(response.getAddress())

@@ -1,7 +1,7 @@
 package com.example.project02.controller;
 
 import com.example.project02.entity.User;
-import com.example.project02.dto.Request;
+import com.example.project02.dto.UserRequest;
 import com.example.project02.service.JwtTokenService;
 import com.example.project02.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +24,12 @@ public class UserController {
     private final JwtTokenService jwtTokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody Request request) {
+    public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody UserRequest userRequest) {
         Map<String, Object> response = new HashMap<>();
 
-        User user = userService.findByEmail(request.getEmail());
+        User user = userService.findByEmail(userRequest.getEmail());
         if (user == null) {
-            userService.signup(request);
+            userService.signup(userRequest);
 
             response.put("status", "success");
             response.put("message", "회원가입이 성공적으로 되었습니다.");
@@ -42,10 +42,10 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody Request request) {
-        ResponseEntity<?> errorResponse = validateUser(request);
+    public ResponseEntity<?> login(@Valid @RequestBody UserRequest userRequest) {
+        ResponseEntity<?> errorResponse = validateUser(userRequest);
         if (errorResponse != null) return errorResponse;
-        HttpHeaders headers = jwtTokenService.createToken(request);
+        HttpHeaders headers = jwtTokenService.createToken(userRequest);
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", "로그인되었습니다.");
         return ResponseEntity.status(200).headers(headers).body(responseBody);
@@ -61,10 +61,10 @@ public class UserController {
     }
 
     @PatchMapping("/withdrawal")
-    public ResponseEntity<?> withdrawal(@Valid @RequestBody Request request) {
-        ResponseEntity<?> errorResponse = validateUser(request);
+    public ResponseEntity<?> withdrawal(@Valid @RequestBody UserRequest userRequest) {
+        ResponseEntity<?> errorResponse = validateUser(userRequest);
         if (errorResponse != null) return errorResponse;
-        userService.withdrawal(request);
+        userService.withdrawal(userRequest);
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", "회원 탈퇴가 성공적으로 되었습니다.");
         return ResponseEntity.status(200).body(responseBody);
@@ -72,13 +72,13 @@ public class UserController {
 
 
     // 회원 정보 검증
-    public ResponseEntity<?> validateUser(Request request) {
-        request.setPassword(userService.sha256(request.getPassword()));
-        User user = userService.findByEmailAndPassword(request.getEmail(), request.getPassword());
+    public ResponseEntity<?> validateUser(UserRequest userRequest) {
+        userRequest.setPassword(userService.sha256(userRequest.getPassword()));
+        User user = userService.findByEmailAndPassword(userRequest.getEmail(), userRequest.getPassword());
         Map<String, String> responseBody = new HashMap<>();
 
         if (user == null) {
-            return userService.validateUser(request);
+            return userService.validateUser(userRequest);
         } else if (Objects.equals(user.getStatus(), "delete")) {
             responseBody.put("error", "유효한 회원이 아닙니다.");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
