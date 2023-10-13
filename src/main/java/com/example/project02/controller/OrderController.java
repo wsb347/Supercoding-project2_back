@@ -21,7 +21,7 @@ public class OrderController {
     @PostMapping("/{userId}/payments")
     public ResponseEntity<Map<String, String>> order(@PathVariable("userId") Long userId) {
 
-        Cart cart = cartRepository.findByUserId(userId);
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("조회 불가"));
 
         if (cart == null) {
             throw new RuntimeException("장바구니에 상품을 먼저 추가해주세요");

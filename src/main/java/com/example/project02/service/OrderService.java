@@ -24,29 +24,28 @@ public class OrderService {
     public void order(Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() ->
-            new RuntimeException("조회되지 않는 회원"));
+                new RuntimeException("조회되지 않는 회원"));
 
-        List<CartProduct> cartProducts = user.getCart().getCartProducts();
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() ->
+                new RuntimeException("조회 불가"));
 
-        for (CartProduct cartProduct : cartProducts) {
+        cart.getCartProducts()
+                .stream()
+                .map(cartProduct -> {
+                    Product product = cartProduct.getProduct();
+                    double price = product.getPrice();
+                    int amount = cartProduct.getAmount();
+                    OrderProduct orderProduct = OrderProduct.createOrderProduct(product, price, amount);
+                    orderProductRepository.save(orderProduct);
 
-            Product product = cartProduct.getProduct();
+                    return Order.createOrder(user, orderProduct);
+                })
+                .forEach(order -> {
+                    orderRepository.save(order);
+                    Payment.createPayment(user, order);
+                });
 
-            double price = product.getPrice();
-            int amount = cartProduct.getAmount();
 
-            OrderProduct orderProduct = OrderProduct.createOrderProduct(product, price, amount);
-
-            orderProductRepository.save(orderProduct);
-
-            Order order = Order.createOrder(user, orderProduct);
-
-            orderRepository.save(order);
-
-            Payment.createPayment(user, order);
-            }
-
-        Cart cart = cartRepository.findByUserId(userId);
         cartRepository.delete(cart);
     }
 }

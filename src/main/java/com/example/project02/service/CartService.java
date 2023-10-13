@@ -30,51 +30,51 @@ public class CartService {
     @Transactional
     public void addProduct(Long userId, CartRequest request) {
 
-        Cart cart = cartRepository.findByUserId(userId);
-
         User user = userRepository.findById(userId).orElseThrow(() ->
             new RuntimeException("가입되지 않은 정보입니다."));
 
         Product product = productRepository.findById(request.getProductId()).orElseThrow(() ->
             new RuntimeException("등록되지 않은 제품입니다."));
 
-        if (product.getStockQuantity() < request.getQuantity()) {
-            throw new OutOfStockException("재고 부족");
-        }
-
-        if(request.getQuantity() <= 0){
-            throw new RuntimeException("최소 1개 이상 입력하십시오.");
-        }
-
-        if (cart == null) {
-            cart = Cart.createCart(user);
-            cartRepository.save(cart);
-        }
+        Cart cart = cartRepository.findByUserId(userId).orElseGet(() -> {
+            Cart newCart = Cart.createCart(user);
+            cartRepository.save(newCart);
+            return newCart;
+        });
 
         CartProduct cartProduct = cartProductRepository.findByCartIdAndProductId(cart.getId(), product.getId());
+
+        // 요청 수량 검사 메소드
+        validateQuantity(request, product);
+
         if (cartProduct == null) {
             cartProduct = CartProduct.createCartProduct(cart, product, request.getQuantity());
-
             cartProductRepository.save(cartProduct);
-
         } else {
             cartProduct.setCart(cartProduct.getCart());
             cartProduct.setProduct(cartProduct.getProduct());
             cartProduct.setAmount(cartProduct.getAmount());
             cartProduct.addCount(request.getQuantity());
+            if (cartProduct.getAmount() > product.getStockQuantity()) {
+                throw new OutOfStockException("재고 부족");
+            }
             cartProduct.setPrice(product);
-            cartProductRepository.save(cartProduct);
+//            cartProductRepository.save(cartProduct);
         }
 
         cart.setTotalCount(cart.getTotalCount() + request.getQuantity());
+
         Double totalPrice = cartRepository.calculateTotalPriceByCartId(cart.getId());
         cart.setTotalPrice(totalPrice);
     }
 
+
+
     @Transactional
     public void changeProductAmount(Long userId, ChangeAmountRequest request) {
 
-        Cart cart = cartRepository.findByUserId(userId);
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() ->
+                new RuntimeException("조회 불가"));
 
         Long cartId = cart.getId();
 
@@ -83,26 +83,10 @@ public class CartService {
 
         CartProduct cartProduct = cartProductRepository.findByIdAndCartId(cartProductId, cartId);
 
-        if (cartProduct == null) {
-            throw new RuntimeException("조회되지 않습니다.");
-        }
-
         Product product = cartProductRepository.findProduct(cartProduct.getId(), cartId);
 
-        if (product.getStockQuantity() < request.getAmount()) {
-            throw new OutOfStockException("재고 부족");
-        }
-
-        int findAmount = cartProduct.getAmount();
-
-        if (findAmount == amount) {
-            throw new RuntimeException("이미 담겨 있는 수량과 변경하려는 수량이 같습니다");
-        }
-
-        if (amount <= 0) {
-            throw new RuntimeException("수량을 다시 입력해주세요");
-        }
-
+        // 요청 에러 검출 메소드
+        validateRequest(request, product, cartProduct, amount);
 
         cartProduct.setAmount(amount);
 
@@ -116,9 +100,12 @@ public class CartService {
         cart.setTotalPrice(totalPrice);
     }
 
+
+
     public CartResponse getCart(Long userId) {
 
-        Cart cart = cartRepository.findByUserId(userId);
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() ->
+                new RuntimeException("조회 불가"));
         Long idUser = cart.getUser().getId();
         int totalCount = cart.getTotalCount();
         double totalPrice = cart.getTotalPrice();
@@ -135,6 +122,44 @@ public class CartService {
         return new CartResponse(idUser, totalCount, totalPrice, productDtoList);
 
 
+    }
+
+    /**
+    * 요청 에러 검출 메소드
+    */
+    private void validateRequest(ChangeAmountRequest request, Product product, CartProduct cartProduct, int amount) {
+        if (product.getStockQuantity() < request.getAmount()) {
+            throw new OutOfStockException("재고 부족");
+        }
+
+        if (cartProduct == null) {
+            throw new RuntimeException("조회되지 않습니다.");
+        }
+
+        int findAmount = cartProduct.getAmount();
+
+        if (findAmount == amount) {
+            throw new RuntimeException("이미 담겨 있는 수량과 변경하려는 수량이 같습니다");
+        }
+
+        if (amount <= 0) {
+            throw new RuntimeException("수량을 다시 입력해주세요");
+        }
+    }
+
+    /**
+     * 요청 수량 검사 메소드
+     */
+    private void validateQuantity(CartRequest request, Product product) {
+        if (product.getStockQuantity() < request.getQuantity()) {
+            throw new OutOfStockException("재고 부족");
+        }
+
+
+
+        if(request.getQuantity() <= 0){
+            throw new RuntimeException("최소 1개 이상 입력하십시오.");
+        }
     }
 }
 
