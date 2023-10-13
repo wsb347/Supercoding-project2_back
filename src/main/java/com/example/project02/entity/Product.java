@@ -32,6 +32,8 @@ public class Product {
 
     private LocalDateTime fieldPredictedSaleEndDate;
 
+    private String option;
+
     private String img1;
 
     private String img2;
