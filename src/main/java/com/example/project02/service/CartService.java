@@ -1,6 +1,8 @@
 package com.example.project02.service;
 
+import com.example.project02.dto.CartResponse;
 import com.example.project02.dto.ChangeAmountRequest;
+import com.example.project02.dto.ProductResponse;
 import com.example.project02.entity.Cart;
 import com.example.project02.entity.CartProduct;
 import com.example.project02.entity.Product;
@@ -14,6 +16,8 @@ import com.example.project02.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -110,6 +114,27 @@ public class CartService {
 
         Double totalPrice = cartRepository.calculateTotalPriceByCartId(cart.getId());
         cart.setTotalPrice(totalPrice);
+    }
+
+    public CartResponse getCart(Long userId) {
+
+        Cart cart = cartRepository.findByUserId(userId);
+        Long idUser = cart.getUser().getId();
+        int totalCount = cart.getTotalCount();
+        double totalPrice = cart.getTotalPrice();
+
+        List<ProductResponse> productDtoList = cart.getCartProducts().stream().map(product ->
+                        new ProductResponse(product.getId(),
+                                       product.getProduct().getName(),
+                                       product.getProduct().getPrice(),
+                                       product.getPrice(),
+                                       product.getAmount(),
+                                       product.getProduct().getStockQuantity()))
+                                        .collect(Collectors.toList());
+
+        return new CartResponse(idUser, totalCount, totalPrice, productDtoList);
+
+
     }
 }
 

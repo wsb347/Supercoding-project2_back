@@ -1,5 +1,6 @@
 package com.example.project02.controller;
 
+import com.example.project02.dto.CartResponse;
 import com.example.project02.dto.ChangeAmountRequest;
 import com.example.project02.entity.Product;
 import com.example.project02.dto.CartRequest;
@@ -41,6 +42,12 @@ public class CartController {
         cartService.changeProductAmount(userId, request);
 
         return ResponseEntity.ok().body("변경되었습니다.");
+    }
+
+    @GetMapping("/{userId}/carts")
+    public ResponseEntity<CartResponse> getCart(@PathVariable("userId") Long userId) {
+        CartResponse cart = cartService.getCart(userId);
+        return ResponseEntity.ok().body(cart);
     }
 
 

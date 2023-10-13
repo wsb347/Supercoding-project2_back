@@ -2,6 +2,7 @@ package com.example.project02.service;
 
 import com.example.project02.entity.User;
 import com.example.project02.dto.Request;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -55,6 +55,15 @@ public class JwtTokenService {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         return headers;
+    }
+
+    public Long decodeToken(String token){
+        validation(token);
+        Claims claims = Jwts.parserBuilder().setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("user_id", Long.class);
     }
 
     // 토큰 검증
