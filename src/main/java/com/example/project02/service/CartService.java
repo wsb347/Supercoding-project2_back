@@ -1,14 +1,11 @@
 package com.example.project02.service;
 
-import com.example.project02.dto.CartResponse;
-import com.example.project02.dto.ChangeAmountRequest;
-import com.example.project02.dto.ProductResponse;
+import com.example.project02.dto.*;
 import com.example.project02.entity.Cart;
 import com.example.project02.entity.CartProduct;
 import com.example.project02.entity.Product;
 import com.example.project02.entity.User;
 import com.example.project02.exception.OutOfStockException;
-import com.example.project02.dto.CartRequest;
 import com.example.project02.repository.CartProductRepository;
 import com.example.project02.repository.CartRepository;
 import com.example.project02.repository.ProductRepository;
@@ -27,6 +24,9 @@ public class CartService {
     private final CartRepository cartRepository;
     private final CartProductRepository cartProductRepository;
 
+    /**
+    * 장바구니 상품 추가
+    */
     @Transactional
     public void addProduct(Long userId, CartRequest request) {
 
@@ -68,8 +68,9 @@ public class CartService {
         cart.setTotalPrice(totalPrice);
     }
 
-
-
+    /**
+    * 장바구니 상품 수량 변경
+    */
     @Transactional
     public void changeProductAmount(Long userId, ChangeAmountRequest request) {
 
@@ -100,7 +101,46 @@ public class CartService {
         cart.setTotalPrice(totalPrice);
     }
 
+    /**
+    * 장바구니 상품 삭제
+    */
+    @Transactional
+    public void removeProduct(Long userId, RemoveProductRequest request) {
 
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() ->
+                new RuntimeException("조회 불가"));
+
+        List<Long> cartProductIdList = request.getCartProductIdList();
+
+        if (cartProductIdList.isEmpty()) {
+            cart.getCartProducts().clear();
+            cart.setTotalPrice(0);
+            cart.setTotalCount(0);
+            cartRepository.save(cart);
+        } else {
+            List<CartProduct> newCartProducts = cart.getCartProducts()
+                    .stream()
+                    .filter(cartProduct -> !cartProductIdList.contains(cartProduct.getId()))
+                    .collect(Collectors.toList());
+
+            cart.getCartProducts().clear();
+            cart.getCartProducts().addAll(newCartProducts);
+
+            try {
+                Integer totalAmount = cartRepository.calculateTotalAmountByCartId(cart.getId());
+                cart.setTotalCount(totalAmount);
+
+                Double totalPrice = cartRepository.calculateTotalPriceByCartId(cart.getId());
+                cart.setTotalPrice(totalPrice);
+            } catch (NullPointerException e) {
+                cart.setTotalPrice(0);
+                cart.setTotalCount(0);
+                cartRepository.save(cart);
+            }
+
+
+        }
+    }
 
     public CartResponse getCart(Long userId) {
 
@@ -110,14 +150,15 @@ public class CartService {
         int totalCount = cart.getTotalCount();
         double totalPrice = cart.getTotalPrice();
 
-        List<ProductResponse> productDtoList = cart.getCartProducts().stream().map(product ->
-                        new ProductResponse(product.getId(),
-                                       product.getProduct().getName(),
-                                       product.getProduct().getPrice(),
-                                       product.getPrice(),
-                                       product.getAmount(),
-                                       product.getProduct().getStockQuantity()))
-                                        .collect(Collectors.toList());
+        List<ProductResponse> productDtoList = cart.getCartProducts().stream().map(cartProduct ->
+                        new ProductResponse(cartProduct.getId(),
+                                cartProduct.getProduct().getId(),
+                                cartProduct.getProduct().getName(),
+                                cartProduct.getProduct().getPrice(),
+                                cartProduct.getPrice(),
+                                cartProduct.getAmount(),
+                                cartProduct.getProduct().getStockQuantity()))
+                .collect(Collectors.toList());
 
         return new CartResponse(idUser, totalCount, totalPrice, productDtoList);
 

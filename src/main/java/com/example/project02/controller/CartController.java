@@ -2,6 +2,7 @@ package com.example.project02.controller;
 
 import com.example.project02.dto.CartResponse;
 import com.example.project02.dto.ChangeAmountRequest;
+import com.example.project02.dto.RemoveProductRequest;
 import com.example.project02.entity.Product;
 import com.example.project02.dto.CartRequest;
 import com.example.project02.repository.ProductRepository;
@@ -48,6 +49,14 @@ public class CartController {
     public ResponseEntity<CartResponse> getCart(@PathVariable("userId") Long userId) {
         CartResponse cart = cartService.getCart(userId);
         return ResponseEntity.ok().body(cart);
+    }
+
+    @DeleteMapping("{userId}/carts")
+    public ResponseEntity<String> removeProduct(@PathVariable("userId") Long userId, @RequestBody RemoveProductRequest request) {
+        cartService.removeProduct(userId, request);
+
+        return ResponseEntity.ok().body("삭제 되었습니다.");
+
     }
 
 
