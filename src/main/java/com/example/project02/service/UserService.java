@@ -4,6 +4,7 @@ import com.example.project02.converter.UserConverter;
 import com.example.project02.entity.User;
 import com.example.project02.dto.SmsCertification;
 import com.example.project02.dto.UserRequest;
+import com.example.project02.exception.AuthenticationNumberMismatchException;
 import com.example.project02.repository.UserRepository;
 import com.example.project02.service.sms.SmsCertificationService;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +37,13 @@ public class UserService {
         userRequest.setAddress(userRequest.getAddress() + " " + userRequest.getDetailedAddress());
         User NewUser = userConverter.toEntity(userRequest);
 
+        if(userRequest.getCertificationNumber() == null || userRequest.getCertificationNumber().isEmpty()){
+            throw new RuntimeException("인증번호를 입력해주세요.");
+        }
+
         SmsCertification smsCertification = new SmsCertification(userRequest.getPhone(), userRequest.getCertificationNumber());
-        if (!smsCertificationService.isVerify(smsCertification)) {
-            throw new RuntimeException("SMS 인증에 실패했습니다.");
+        if (smsCertificationService.isVerify(smsCertification)) {
+            throw new AuthenticationNumberMismatchException("인증번호가 일치하지 않습니다.");
         }
         userRepository.save(NewUser);
     }

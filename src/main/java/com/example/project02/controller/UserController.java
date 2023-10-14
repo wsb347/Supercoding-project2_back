@@ -23,6 +23,11 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
 
+    @GetMapping("/test")
+    public String signupTest(){
+        return "signup";
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody UserRequest userRequest) {
         Map<String, Object> response = new HashMap<>();
