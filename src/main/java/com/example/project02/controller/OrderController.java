@@ -1,9 +1,9 @@
 package com.example.project02.controller;
 
 import com.example.project02.dto.SelectProductRequest;
-import com.example.project02.entity.Cart;
 import com.example.project02.repository.CartRepository;
 import com.example.project02.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +19,7 @@ public class OrderController {
     private final OrderService orderService;
     private final CartRepository cartRepository;
 
+    @Operation(summary = "주문 요청", description = "장바구니를 조회했을 때 나오는 cartProductId를 입력, null이면 장바구니 전체 상품 주문")
     @PostMapping("/{userId}/payments")
     public ResponseEntity<Map<String, String>> order(@PathVariable("userId") Long userId, SelectProductRequest request) {
 
