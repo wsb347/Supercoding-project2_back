@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    @Query("SELECT id FROM Category WHERE name = :name")
-    Long findByCategoryId(@Param("name") String name);
+    // categoryName과 일치하는 categoryId값
+    @Query("SELECT categoryId FROM Category WHERE categoryName = :categoryName")
+    Long findCategoryId(@Param("categoryName") String categoryName);
 }

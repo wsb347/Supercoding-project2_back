@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -20,18 +21,9 @@ public class Product {
     @Column(name = "product_name", unique = true)
     private String name;
 
-    private double price;
-
-    @Column(name = "stock_quantity")
-    private Integer stockQuantity;
-
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    private LocalDateTime registerDate;
-
-    private LocalDateTime fieldPredictedSaleEndDate;
 
     private String img1;
 
@@ -39,11 +31,18 @@ public class Product {
 
     private String img3;
 
-    @Column(name = "product_option")
-    private String option;
+    private double price;
+
+    @Column(name = "stock_quantity")
+    private Integer stockQuantity;
+
+    private LocalDateTime registerDate;
+
+    private LocalDateTime fieldPredictedSaleEndDate;
 
 //    조회수
     private int click;
+
 
     public void removeStock(int quantity) {
         int stock = stockQuantity - quantity;
@@ -54,7 +53,4 @@ public class Product {
         }
     }
 
-//    public void clickCount(){
-//        this.click++;
-//    }
 }

@@ -12,23 +12,25 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-//    Optional<Product> findByName(String name);
 
+    // name과 일치하는 Data
     List<Product> findByName(String name);
 
-    @Query("SELECT DISTINCT p.name FROM Product p WHERE p.stockQuantity > :stockQuantity")
-    List<String> findByStockQuantityGreaterThan(@Param("stockQuantity") Integer stockQuantity);
+    // stockQuantity가 0보다 큰 Data registerDate 내림차순
+    @Query("SELECT p FROM Product p WHERE p.stockQuantity > :stockQuantity ORDER BY p.registerDate DESC ")
+    List<Product> findByStockQuantityGreaterThan(@Param("stockQuantity") Integer stockQuantity);
 
-//@Query("SELECT DISTINCT p FROM Product p WHERE p.stockQuantity > :stockQuantity")
-//List<Product> findByStockQuantityGreaterThan(@Param("stockQuantity") Integer stockQuantity);
-
-
-//    @Query("SELECT s FROM ShopEntity s WHERE s.productName LIKE %:keyword%")
-//    List<ShopEntity> findByProductNameContainingKeyword(@Param("keyword") String keyword);
-
+    // Containing - keyword가 포함된 Name의 Data
     List<Product> findByNameContaining(String keyword);
 
-    List<Product> findByCategoryId(Long categoryId);
+    // Category Entity의 CategoryId값과 일치하는 Data
+    List<Product> findByCategoryCategoryId(Long categoryId);
 
 
+//    조회수 오름차순 내림차순
+    @Query("SELECT p FROM Product p WHERE p.stockQuantity > :stockQuantity ORDER BY p.click DESC")
+    List<Product> findByOrderByClickDesc(@Param("stockQuantity") int stockQuantity);
+
+    @Query("SELECT p FROM Product p WHERE p.stockQuantity > :stockQuantity ORDER BY p.click ASC")
+    List<Product> findByOrderByClickAsc(@Param("stockQuantity") int stockQuantity);
 }
