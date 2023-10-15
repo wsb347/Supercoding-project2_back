@@ -35,7 +35,6 @@ CREATE TABLE `product` (
 	`product_name` VARCHAR(20), #상품명
 	`price` double, #가격
 	`stock_quantity` Integer, #재고수량product
-	`option` VARCHAR(20),
 	`register_date` TIMESTAMP NOT NULL default CURRENT_TIMESTAMP, #등록일
 	`field_predicted_sale_enddate` TIMESTAMP NOT NULL, #예상판매 종료날짜
 	`img1` VARCHAR(600), #이미지1
