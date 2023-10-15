@@ -22,6 +22,7 @@ public class Product {
 
     private double price;
 
+    @Column(name = "stock_quantity")
     private Integer stockQuantity;
 
     @ManyToOne
@@ -32,13 +33,17 @@ public class Product {
 
     private LocalDateTime fieldPredictedSaleEndDate;
 
-    private String option;
-
     private String img1;
 
     private String img2;
 
     private String img3;
+
+    @Column(name = "product_option")
+    private String option;
+
+//    조회수
+    private int click;
 
     public void removeStock(int quantity) {
         int stock = stockQuantity - quantity;
@@ -49,6 +54,7 @@ public class Product {
         }
     }
 
-
-
+//    public void clickCount(){
+//        this.click++;
+//    }
 }
