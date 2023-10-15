@@ -2,8 +2,10 @@ package com.example.project02.service;
 
 import com.example.project02.converter.UserConverter;
 import com.example.project02.entity.User;
-import com.example.project02.model.Request;
-import com.example.project02.repository.UserRopository;
+import com.example.project02.dto.SmsCertification;
+import com.example.project02.dto.UserRequest;
+import com.example.project02.repository.UserRepository;
+import com.example.project02.service.sms.SmsCertificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,24 +14,51 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRopository userRopository;
+    private final UserRepository userRepository;
     UserConverter userConverter = new UserConverter();
+    private final SmsCertificationService smsCertificationService;
+
+    @Transactional(readOnly = true)
+    public User findUser(Long id) {
+        User user = userRepository.findById(id).orElseGet(()->{
+            return new User();
+        });
+        return user;
+    }
+
+    public void userInfoModification(User user) {
+        User persistence =
+                userRepository.findById(user.getId()).orElseThrow(()->{
+                    return new IllegalArgumentException("회원 찾기 실패");
+                });
+        String email = user.getEmail();
+        String address = user.getAddress();
+        persistance.setEmail(email);
+        persistance.setAddress(address);
+    }
 
     public User findByEmail(String email) {
-        var isUser = userRopository.findByEmail(email);
+        var isUser = userRepository.findByEmail(email);
         return isUser.orElse(null);
     }
 
-    public void signup(Request request) {
-        isValidPassword(request.getPassword());
-        request.setPassword(sha256(request.getPassword()));
-        User NewUser = userConverter.toEntity(request);
+    public void signup(UserRequest userRequest) {
+        isValidPassword(userRequest.getPassword());
+        userRequest.setPassword(sha256(userRequest.getPassword()));
+        userRequest.setAddress(userRequest.getAddress() + " " + userRequest.getDetailedAddress());
+        User NewUser = userConverter.toEntity(userRequest);
 
-        userRopository.save(NewUser);
+        SmsCertification smsCertification = new SmsCertification(userRequest.getPhone(), userRequest.getCertificationNumber());
+        if (!smsCertificationService.isVerify(smsCertification)) {
+            throw new RuntimeException("SMS 인증에 실패했습니다.");
+        }
+        userRepository.save(NewUser);
     }
 
     // 회원가입시 비밀번호 검증
@@ -73,25 +102,30 @@ public class UserService {
     }
 
     public User findByEmailAndPassword(String email, String password) {
-        var isUser = userRopository.findFirstByEmailAndPasswordOrderByIdDesc(email, password);
+        var isUser = userRepository.findFirstByEmailAndPasswordOrderByIdDesc(email, password);
         return isUser.orElse(null);
     }
 
-    public ResponseEntity<?> validateUser(Request request) {
-        if (findByEmail(request.getEmail()) == null)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("가입된 이메일이 아닙니다.");
-        else if (findByEmailAndPassword(request.getEmail(), request.getPassword()) == null)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("잘못된 비밀번호 입니다.");
+    public ResponseEntity<?> validateUser(UserRequest userRequest) {
+        Map<String, String> responseBody = new HashMap<>();
 
-        return null;
+        if (findByEmail(userRequest.getEmail()) == null) {
+            responseBody.put("error", "가입된 이메일이 아닙니다.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
+        } else if (findByEmailAndPassword(userRequest.getEmail(), userRequest.getPassword()) == null) {
+            responseBody.put("error", "잘못된 비밀번호 입니다.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
+        }
+
+        return ResponseEntity.ok(responseBody);
     }
 
-    public void withdrawal(Request request) {
-        var existingUser = userRopository.findByEmailAndStatus(request.getEmail(), "REGISTERED");
+    public void withdrawal(UserRequest userRequest) {
+        var existingUser = userRepository.findByEmailAndStatus(userRequest.getEmail(), "REGISTERED");
         if (existingUser.isPresent()) {
             User deleteUser = existingUser.get();
             deleteUser.setStatus("delete");
-            userRopository.save(deleteUser);
+            userRepository.save(deleteUser);
         }
     }
 }

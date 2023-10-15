@@ -3,6 +3,8 @@ package com.example.project02.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "`user`")
@@ -16,6 +18,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    private String name;
 
     @Column(length = 45, nullable = false, unique = true)
     private String email;
@@ -31,8 +35,14 @@ public class User {
 
     private String status;
 
-    @Column(length = 10, nullable = false)
-    private String type;
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Cart cart;
 
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
 
+    private String img;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserProfile> userProfile = new ArrayList<>();
 }
