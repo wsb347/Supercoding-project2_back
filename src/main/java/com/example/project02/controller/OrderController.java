@@ -1,5 +1,6 @@
 package com.example.project02.controller;
 
+import com.example.project02.dto.SelectProductRequest;
 import com.example.project02.entity.Cart;
 import com.example.project02.repository.CartRepository;
 import com.example.project02.service.OrderService;
@@ -19,23 +20,14 @@ public class OrderController {
     private final CartRepository cartRepository;
 
     @PostMapping("/{userId}/payments")
-    public ResponseEntity<Map<String, String>> order(@PathVariable("userId") Long userId) {
+    public ResponseEntity<Map<String, String>> order(@PathVariable("userId") Long userId, SelectProductRequest request) {
 
-        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("조회 불가"));
+       orderService.order(userId, request);
 
-        if (cart == null) {
-            throw new RuntimeException("장바구니에 상품을 먼저 추가해주세요");
-        }
-
-        int count = cart.getTotalCount();
-        double price = cart.getTotalPrice();
-
-        String response = String.format("총 %d개의 상품과 함께 %.1f원 결제되었습니다.", count, price);
+        String response = "결제 되었습니다";
 
         Map<String, String> message = new HashMap<>();
         message.put("message", response);
-
-        orderService.order(userId);
 
         return ResponseEntity.ok().body(message);
     }

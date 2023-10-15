@@ -105,12 +105,24 @@ public class CartService {
     * 장바구니 상품 삭제
     */
     @Transactional
-    public void removeProduct(Long userId, RemoveProductRequest request) {
+    public void removeProduct(Long userId, SelectProductRequest request) {
 
         Cart cart = cartRepository.findByUserId(userId).orElseThrow(() ->
                 new RuntimeException("조회 불가"));
 
         List<Long> cartProductIdList = request.getCartProductIdList();
+
+        if (cart.getTotalCount() == 0) {
+            throw new RuntimeException("장바구니가 비어있습니다");
+        }
+
+        for (Long cartProductId : cartProductIdList) {
+            CartProduct cartProduct = cartProductRepository.findByIdAndCartId(cartProductId, cart.getId());
+            if (cartProduct == null) {
+                throw new RuntimeException("이미 삭제되었거나 조회되지 않는 id입니다.");
+            }
+        }
+
 
         if (cartProductIdList.isEmpty()) {
             cart.getCartProducts().clear();
@@ -154,6 +166,7 @@ public class CartService {
                         new ProductResponse(cartProduct.getId(),
                                 cartProduct.getProduct().getId(),
                                 cartProduct.getProduct().getName(),
+                                cartProduct.getProduct().getImg1(),
                                 cartProduct.getProduct().getPrice(),
                                 cartProduct.getPrice(),
                                 cartProduct.getAmount(),

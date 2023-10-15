@@ -9,7 +9,7 @@ import java.util.List;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RemoveProductRequest {
+public class SelectProductRequest {
 
     private List<Long> cartProductIdList;
 }

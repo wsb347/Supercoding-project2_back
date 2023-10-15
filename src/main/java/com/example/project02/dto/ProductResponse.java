@@ -10,6 +10,7 @@ public class ProductResponse {
     private Long cartProductId;
     private Long productId;
     private String productName;
+    private String productImage;
     private double productPrice;
     private double totalPrice;
     private int amount;
