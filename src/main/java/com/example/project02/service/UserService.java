@@ -31,15 +31,15 @@ public class UserService {
     }
 
     public void signup(UserRequest userRequest) {
-        isValidPassword(userRequest.getPassword());
+//        isValidPassword(userRequest.getPassword());
         userRequest.setPassword(sha256(userRequest.getPassword()));
         userRequest.setAddress(userRequest.getAddress() + " " + userRequest.getDetailedAddress());
         User NewUser = userConverter.toEntity(userRequest);
 
-        SmsCertification smsCertification = new SmsCertification(userRequest.getPhone(), userRequest.getCertificationNumber());
-        if (!smsCertificationService.isVerify(smsCertification)) {
-            throw new RuntimeException("SMS 인증에 실패했습니다.");
-        }
+//        SmsCertification smsCertification = new SmsCertification(userRequest.getPhone(), userRequest.getCertificationNumber());
+//        if (!smsCertificationService.isVerify(smsCertification)) {
+//            throw new RuntimeException("SMS 인증에 실패했습니다.");
+//        }
         userRepository.save(NewUser);
     }
 
