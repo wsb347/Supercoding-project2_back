@@ -21,6 +21,9 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
 
+    //userPage 프로젝트의 코드.... 추가..
+
+
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody Request request) {
         User user = userService.findByEmail(request.getEmail());
