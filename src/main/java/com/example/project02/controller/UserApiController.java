@@ -18,6 +18,7 @@ import java.util.Map;
 @RequestMapping("/api")
 public class UserApiController {
 
+
 	private final UserSerivce userService;
     private final SmsCertificationService smsCertificationService;
     
@@ -26,6 +27,7 @@ public class UserApiController {
 		userService.userInfoModification(user);
 		return new UserRequest<Integer>(HttpStatus.OK.value(),1);
 	}
+
 
     @Autowired
     public UserApiController(SmsCertificationService smsCertificationService) {

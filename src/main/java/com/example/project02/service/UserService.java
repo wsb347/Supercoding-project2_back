@@ -24,6 +24,7 @@ public class UserService {
     UserConverter userConverter = new UserConverter();
     private final SmsCertificationService smsCertificationService;
 
+
     @Transactional(readOnly = true)
     public User findUser(Long id) {
         User user = userRepository.findById(id).orElseGet(()->{
@@ -42,6 +43,7 @@ public class UserService {
         persistance.setEmail(email);
         persistance.setAddress(address);
     }
+
 
     public User findByEmail(String email) {
         var isUser = userRepository.findByEmail(email);

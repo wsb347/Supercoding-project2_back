@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
+
     Cart findByUserId(Long user_id);
 
     @Query("SELECT SUM(cp.price) FROM CartProduct cp WHERE cp.cart.id = :cartId")

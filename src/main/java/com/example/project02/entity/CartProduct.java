@@ -29,7 +29,9 @@ public class CartProduct {
 
     public static CartProduct createCartProduct(Cart cart, Product product, int amount) {
         if (product.getStockQuantity() < amount) {
-            throw new OutOfStockException("Àç°íºÎÁ·");
+
+            throw new OutOfStockException("ìž¬ê³ ë¶€ì¡±");
+
         } else {
             CartProduct cartProduct = new CartProduct();
             cartProduct.setCart(cart);
@@ -50,3 +52,4 @@ public class CartProduct {
 
 
 }
+

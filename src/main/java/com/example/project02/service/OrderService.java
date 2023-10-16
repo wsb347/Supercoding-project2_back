@@ -15,11 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
+
     private final UserService userService;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final OrderProductRepository orderProductRepository;
+
 
     public List<OrderItem> findUserOrderProducts(Long userId) {
         return orderProductRepository.findOrderProcudtsByUserId(userId);
@@ -33,7 +35,9 @@ public class OrderService {
     public void order(Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() ->
+
                 new RuntimeException("조회되지 않는 회원"));
+
 
         List<CartProduct> cartProducts = user.getCart().getCartProducts();
 
@@ -53,9 +57,13 @@ public class OrderService {
             orderRepository.save(order);
 
             Payment.createPayment(user, order);
+
         }
+
 
         Cart cart = cartRepository.findByUserId(userId);
         cartRepository.delete(cart);
     }
+
 }
+
