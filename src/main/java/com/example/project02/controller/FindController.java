@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -50,9 +51,9 @@ public class FindController {
 //              - 조회수 체크
 
         @GetMapping("/detail/{name}")
-        public List<Product> detailProduct(@PathVariable String name) {
+        public Optional<Product> detailProduct(@PathVariable String name) {
             findService.clickCount(name);
-            return productRepository.findByName(name);
+            return findService.findByName(name);
         }
 
 
@@ -98,7 +99,7 @@ public class FindController {
 
 //            1. 조회수
         @GetMapping("/all/clickDesc")
-        public List<Product> clickDesc() {
+        public List<Product> clickDesc() throws NullPointerException {
            return productRepository.findByOrderByClickDesc(0);
         }
 

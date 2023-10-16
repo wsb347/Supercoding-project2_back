@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // name과 일치하는 Data
-    List<Product> findByName(String name);
+    Optional<Product> findByName(String name);
 
     // stockQuantity가 0보다 큰 Data registerDate 내림차순
     @Query("SELECT p FROM Product p WHERE p.stockQuantity > :stockQuantity ORDER BY p.registerDate DESC ")
