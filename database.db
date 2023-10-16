@@ -26,7 +26,7 @@ CREATE TABLE `user_profile` (
 
 CREATE TABLE `category` (
 	`category_id` BIGINT auto_increment primary KEY, #카테고리 고유번호
-	`name` VARCHAR(30) NOT NULL #카테고리명
+	`category_name` VARCHAR(30) NOT NULL #카테고리명
 );
 
 CREATE TABLE `product` (
@@ -40,6 +40,7 @@ CREATE TABLE `product` (
 	`img1` VARCHAR(600), #이미지1
 	`img2` VARCHAR(600), #이미지2
 	`img3` VARCHAR(600), #이미지3
+	`click` int,
     FOREIGN KEY (category_id) REFERENCES `category`(category_id)
 );
 
