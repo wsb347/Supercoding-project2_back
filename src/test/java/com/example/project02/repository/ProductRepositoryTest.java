@@ -48,17 +48,17 @@ public class ProductRepositoryTest {
     public void createProductList() {
         // 카테고리를 먼저 생성하고 저장
         Category category = new Category();
-        category.setName("패션");
+        category.setCategoryName("패션");
         Category savedCategory = categoryRepository.save(category);
 
         for (int i = 1; i <= 10; i++) {
             Product product = new Product();
-            product.setProductName("테스트상품" + i);
+            product.setName("테스트상품" + i);
             product.setPrice(10000 + i);
-            product.setStock_quantity(100);
+            product.setStockQuantity(100);
             product.setProductSerllStatus(ProductSerllStatus.SELL);
-            product.setRegister_date(LocalDateTime.now());
-            product.setField_predicted_sale_enddate(new Date());
+            product.setRegisterDate(LocalDateTime.now());
+            product.setFieldPredictedSaleEnddate(new Date());
 
             // 위에서 생성한 카테고리를 설정
             product.setCategory(savedCategory);
@@ -73,17 +73,17 @@ public class ProductRepositoryTest {
     public void testSaveProduct() {
         // Given: 카테고리 생성
         Category category = new Category();
-        category.setName("패션");
+        category.setCategoryName("패션");
         Category savedCategory = categoryRepository.save(category);
 
         // When: 상품 생성 및 저장
         Product product = new Product();
         product.setCategory(savedCategory);
-        product.setProductName("후드티");
+        product.setName("후드티");
         product.setPrice(1000);
-        product.setStock_quantity(10);
-        product.setRegister_date(LocalDateTime.now());
-        product.setField_predicted_sale_enddate(new Date());
+        product.setStockQuantity(10);
+        product.setRegisterDate(LocalDateTime.now());
+        product.setFieldPredictedSaleEnddate(new Date());
         product.setProductSerllStatus(ProductSerllStatus.IN_STOCK);
         product.setImg1("clothes_image1.jpg");
         product.setImg2("clothes_image2.jpg");
@@ -93,13 +93,13 @@ public class ProductRepositoryTest {
 
         // Then: 저장된 상품 검증
         assertThat(savedProduct).isNotNull();
-        assertThat(savedProduct.getProductId()).isNotNull();
+        assertThat(savedProduct.getId()).isNotNull();
 
 
         // Then: 저장된 상품을 다시 조회하여 검증
-        Product retrievedProduct = productRepository.findById(savedProduct.getProductId()).orElse(null);
+        Product retrievedProduct = productRepository.findById(savedProduct.getId()).orElse(null);
         assertThat(retrievedProduct).isNotNull();
-        assertThat(retrievedProduct.getProductName()).isEqualTo("후드티");
+        assertThat(retrievedProduct.getName()).isEqualTo("후드티");
     }
 
     @Test
@@ -116,7 +116,7 @@ public class ProductRepositoryTest {
         // 조회된 상품 리스트 출력
         for (Product product : productList) {
             System.out.println(product.toString());
-            assertThat(product.getProductName()).isEqualTo(productNameToFind);
+            assertThat(product.getName()).isEqualTo(productNameToFind);
         }
     }
         @Test
@@ -126,17 +126,17 @@ public class ProductRepositoryTest {
         public void registerProductTest() {
             // Given: 카테고리 생성 및 저장
             Category category = new Category();
-            category.setName("패션");
+            category.setCategoryName("패션");
             Category savedCategory = categoryRepository.save(category);
 
             // When: 새로운 상품 등록
             Product product = new Product();
             product.setCategory(savedCategory);
-            product.setProductName("신발"); // 상품명 설정
+            product.setName("신발"); // 상품명 설정
             product.setPrice(50000); // 가격 설정
-            product.setStock_quantity(50); // 재고 설정
-            product.setRegister_date(LocalDateTime.now());
-            product.setField_predicted_sale_enddate(new Date());
+            product.setStockQuantity(50); // 재고 설정
+            product.setRegisterDate(LocalDateTime.now());
+            product.setFieldPredictedSaleEnddate(new Date());
             product.setProductSerllStatus(ProductSerllStatus.SELL);
             product.setImg1("shoes_image1.jpg");
             product.setImg2("shoes_image2.jpg");
@@ -146,12 +146,12 @@ public class ProductRepositoryTest {
 
             // Then: 상품 등록 확인
             assertThat(savedProduct).isNotNull();
-            assertThat(savedProduct.getProductId()).isNotNull();
+            assertThat(savedProduct.getId()).isNotNull();
 
             // Then: 등록한 상품 조회하여 검증
-            Product retrievedProduct = productRepository.findById(savedProduct.getProductId()).orElse(null);
+            Product retrievedProduct = productRepository.findById(savedProduct.getId()).orElse(null);
             assertThat(retrievedProduct).isNotNull();
-            assertThat(retrievedProduct.getProductName()).isEqualTo("신발"); // 상품명 확인
+            assertThat(retrievedProduct.getName()).isEqualTo("신발"); // 상품명 확인
         }
 
 }

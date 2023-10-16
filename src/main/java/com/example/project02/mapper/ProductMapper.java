@@ -12,10 +12,10 @@ import java.util.List;
 public interface ProductMapper {
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
-    @Mapping(target = "productId", source = "productId")
+    @Mapping(target = "productId", source = "id")
     ProductDTO toDTO(Product product);
 
-    @Mapping(target = "productId", source = "productId")
+    @Mapping(target = "id", source = "productId")
     Product toEntity(ProductDTO productDTO);
 
 }

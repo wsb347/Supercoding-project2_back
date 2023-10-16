@@ -34,11 +34,11 @@ public class ProductController {
             Model model) {
 
         Product product = new Product();
-        product.setProductName(productName);
+        product.setName(productName);
         product.setProductDescription(productDescription);
         product.setPrice(price);
-        product.setStock_quantity(stockQuantity);
-        product.setRegister_date(LocalDateTime.now());
+        product.setStockQuantity(stockQuantity);
+        product.setRegisterDate(LocalDateTime.now());
         product.setFieldPredictedSaleEnddate(registrationDate);
 
         productService.registerProduct(product);

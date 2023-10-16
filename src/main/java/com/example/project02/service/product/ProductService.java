@@ -44,7 +44,7 @@ public class ProductService {
 
     // 판매 물품 조회
     public ProductDTO getProductByName(String productName) {
-        Product product = productRepository.findByProductName(productName)
+        Product product = productRepository.findByName(productName)
                 .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다. 이름: " + productName));
         return productMapper.toDTO(product);
     }
@@ -52,11 +52,11 @@ public class ProductService {
     //판매 물품 재고 수정
     public boolean updateProductStockByProductName(String productName, int newStockQuantity) {
 
-        Product product = productRepository.findByProductNameIgnoreCase(productName); // 대소문자 구분하지 않는 검색
+        Product product = productRepository.findByNameIgnoreCase(productName); // 대소문자 구분하지 않는 검색
 
         if (product != null) {
 
-            product.setStock_quantity(newStockQuantity);
+            product.setStockQuantity(newStockQuantity);
             productRepository.save(product);
             return true;
         }
@@ -91,12 +91,12 @@ public class ProductService {
         List<SaleRecord> saleRecords = new ArrayList<>();
 
         // productId를 사용하여 판매 종료된 제품을 조회
-        List<Product> expiredProducts = productRepository.findExpiredProductsByProductId(productId);
+        List<Product> expiredProducts = productRepository.findExpiredProductsById(productId);
 
         for (Product product : expiredProducts) {
             SaleRecord saleRecord = new SaleRecord();
-            saleRecord.setProductId(product.getProductId());
-            saleRecord.setProductName(product.getProductName());
+            saleRecord.setProductId(product.getId());
+            saleRecord.setProductName(product.getName());
             saleRecord.setSaleEndDate(product.getFieldPredictedSaleEnddate());
             saleRecord.setSalePrice(product.getPrice());
 

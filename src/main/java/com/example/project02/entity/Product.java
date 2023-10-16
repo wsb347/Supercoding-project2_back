@@ -1,11 +1,13 @@
 package com.example.project02.entity;
 
+import com.example.project02.constant.ProductSerllStatus;
 import com.example.project02.exception.OutOfStockException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -36,11 +38,21 @@ public class Product {
     @Column(name = "stock_quantity")
     private Integer stockQuantity;
 
+    private String productDescription;
+
     private LocalDateTime registerDate;
 
-    private LocalDateTime fieldPredictedSaleEndDate;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "field_predicted_sale_enddate",nullable = false)
+    private Date fieldPredictedSaleEnddate;
 
-//    조회수
+    @Enumerated(EnumType.STRING)
+    private ProductSerllStatus productSerllStatus; //상품 판매상태
+
+    @Column(name = "seller_id")
+    private Long sellerId;
+
+    //    조회수
     private int click;
 
 
