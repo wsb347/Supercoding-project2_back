@@ -24,21 +24,19 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
     private final OrderService orderService;
-    
-    @Autowired
-    private OrderService orderService;
-    
+    private final OrderService orderService;
+
     @GetMapping("/myPage/{id}")
     public String myPage(@PathVariable("id") Long id, Model model) {
-    	List<Order> order = orderService.findByUserId(id);
-    	
-    	model.addAttribute("orders",order);
-    	return "user/myPage";
+        List<Order> order = orderService.findByUserId(id);
+
+        model.addAttribute("orders",order);
+        return "user/myPage";
     }
-    
-    @GetMapptin("/myPage/userInfo")
+
+    @GetMappting("/myPage/userInfo")
     public String userInfo() {
-    	return "user/userInfo";
+        return "user/userInfo";
     }
 
     @PostMapping("/signup")
