@@ -40,6 +40,7 @@ CREATE TABLE `product` (
 	`img1` VARCHAR(600), #이미지1
 	`img2` VARCHAR(600), #이미지2
 	`img3` VARCHAR(600), #이미지3
+	`click` int,
     FOREIGN KEY (category_id) REFERENCES `category`(category_id)
 );
 
