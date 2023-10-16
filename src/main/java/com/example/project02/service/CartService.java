@@ -30,7 +30,7 @@ public class CartService {
         User user = userRepository.findById(userId).orElseThrow(() ->
             new RuntimeException("가입되지 않은 정보입니다."));
 
-        Product product = productRepository.findById(request.getProductId()).orElseThrow(() ->
+            Product product = productRepository.findById(request.getProductId()).orElseThrow(() ->
             new RuntimeException("등록되지 않은 제품입니다."));
 
         if (product.getStockQuantity() < request.getQuantity()) {

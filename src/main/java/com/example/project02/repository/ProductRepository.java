@@ -24,7 +24,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByNameContaining(String keyword);
 
     // Category Entity의 CategoryId값과 일치하는 Data
-    List<Product> findByCategoryCategoryId(Long categoryId);
+    List<Product> findByCategoryCategoryName(String categoryName);
 
 
 //    조회수 오름차순 내림차순

@@ -5,6 +5,7 @@ import com.example.project02.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,7 +16,7 @@ public class FindService {
 
 //    조회수
     public void clickCount (String name){
-        Optional<Product> clickProductName = findByName(name);
+        Optional<Product> clickProductName = productRepository.findByName(name);
 
         if(clickProductName.isPresent()) {
             int clickCount = clickProductName.get().getClick();
@@ -26,11 +27,19 @@ public class FindService {
     }
 
 //  findByName - name 검증
-    public Optional<Product> findByName(String name){
+    public Optional<Product> findByProductName(String product_name){
         try {
-            return productRepository.findByName(name);
+            return productRepository.findByName(product_name);
         }catch (Exception e){
             return Optional.empty();
+        }
+    }
+
+    public List<Product> findByCategoryName(String category_name){
+        try {
+            return productRepository.findByCategoryCategoryName(category_name);
+        }catch (Exception e){
+            return null;
         }
     }
 }

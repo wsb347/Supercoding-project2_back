@@ -53,7 +53,7 @@ public class FindController {
         @GetMapping("/detail/{name}")
         public Optional<Product> detailProduct(@PathVariable String name) {
             findService.clickCount(name);
-            return findService.findByName(name);
+            return findService.findByProductName(name);
         }
 
 
@@ -79,9 +79,7 @@ public class FindController {
 
         @GetMapping("/search/categoryName")
         public List<Product> searchCategory(@RequestParam String categoryName){
-            Long categoryId = categoryRepository.findCategoryId(categoryName);
-
-             return productRepository.findByCategoryCategoryId(categoryId);
+             return findService.findByCategoryName(categoryName);
         }
 
 
