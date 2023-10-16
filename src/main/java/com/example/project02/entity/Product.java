@@ -20,7 +20,7 @@ public class Product {
     @Column(name = "product_id")
     private Long id;
 
-    @Column(name = "product_name", unique = true)
+    @Column(name = "product_name", unique = true,length = 20)
     private String name;
 
     @ManyToOne
