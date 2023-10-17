@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CartService {
@@ -29,13 +32,10 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public CartItem findCartProductById(Long productId) {
-        return cartProductRepository.findById(productId).get();
+    public Optional<CartProduct> findCartProductById(Long productId) {
+        return cartProductRepository.findById(productId);
     }
 
-    public Cart findUserCart(Long id) {
-        return cartRepository.findByUsersId(id);
-    }
 
     @Transactional
     public void addProduct(Long userId, CartRequest request) {

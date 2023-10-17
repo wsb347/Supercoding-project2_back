@@ -1,23 +1,32 @@
 package com.example.project02.controller;
 
+import com.example.project02.dto.UserRequest;
+import com.example.project02.entity.Cart;
+import com.example.project02.entity.CartProduct;
 import com.example.project02.entity.Product;
 import com.example.project02.dto.CartRequest;
+import com.example.project02.entity.User;
 import com.example.project02.repository.ProductRepository;
 import com.example.project02.service.CartService;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.example.project02.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class CartController {
 
-    private final UserSerivce userService;
+    private final UserService userService;
     private final CartService cartService;
     private final ProductRepository productRepository;
 

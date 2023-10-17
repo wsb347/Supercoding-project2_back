@@ -1,18 +1,22 @@
 package com.example.project02.controller;
 
+import com.example.project02.entity.Order;
 import com.example.project02.entity.User;
 import com.example.project02.dto.UserRequest;
 import com.example.project02.service.JwtTokenService;
+import com.example.project02.service.OrderService;
 import com.example.project02.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -24,7 +28,6 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
     private final OrderService orderService;
-    private final OrderService orderService;
 
     @GetMapping("/myPage/{id}")
     public String myPage(@PathVariable("id") Long id, Model model) {
@@ -34,7 +37,7 @@ public class UserController {
         return "user/myPage";
     }
 
-    @GetMappting("/myPage/userInfo")
+    @GetMapping("/myPage/userInfo")
     public String userInfo() {
         return "user/userInfo";
     }

@@ -5,11 +5,11 @@ import com.example.project02.repository.CartRepository;
 import com.example.project02.repository.OrderProductRepository;
 import com.example.project02.repository.OrderRepository;
 import com.example.project02.repository.UserRepository;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +21,12 @@ public class OrderService {
     private final CartRepository cartRepository;
     private final OrderProductRepository orderProductRepository;
 
-    public List<OrderItem> findUserOrderProducts(Long userId) {
-        return orderProductRepository.findOrderProcudtsByUserId(userId);
+    public List<OrderProduct> findUserOrderProducts(Long userId) {
+        return orderProductRepository.findByUserId(userId);
     }
 
     public List<Order> findByUserId(Long id) {
-        return orderRepository.findOrdersByUserId(id);
+        return orderRepository.findByUserId(id);
     }
 
     @Transactional

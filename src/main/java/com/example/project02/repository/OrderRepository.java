@@ -4,9 +4,11 @@ import com.example.project02.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findOrdersByUserId(Long user_id);
+    List<Order> findByUserId(Long user_id);
 
     Order findOrderById(Long order_id);
 }
