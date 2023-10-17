@@ -1,15 +1,15 @@
 package com.example.project02.service;
 
 import com.example.project02.converter.UserConverter;
-import com.example.project02.entity.User;
-import com.example.project02.dto.SmsCertification;
 import com.example.project02.dto.UserRequest;
+import com.example.project02.entity.User;
 import com.example.project02.repository.UserRepository;
 import com.example.project02.service.sms.SmsCertificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -25,20 +25,40 @@ public class UserService {
     private final SmsCertificationService smsCertificationService;
 
 
+    @Transactional(readOnly = true)
+    public User findUser(Long id) {
+        User user = userRepository.findById(id).orElseGet(()->{
+            return new User();
+        });
+        return user;
+    }
+
+    public void userInfoModification(User user) {
+        User persistence =
+                userRepository.findById(user.getId()).orElseThrow(()->{
+                    return new IllegalArgumentException("회원 찾기 실패");
+                });
+
+    }
+
     public User findByEmail(String email) {
         var isUser = userRepository.findByEmail(email);
         return isUser.orElse(null);
     }
 
     public void signup(UserRequest userRequest) {
-//        isValidPassword(userRequest.getPassword());
+        isValidPassword(userRequest.getPassword());
         userRequest.setPassword(sha256(userRequest.getPassword()));
         userRequest.setAddress(userRequest.getAddress() + " " + userRequest.getDetailedAddress());
         User NewUser = userConverter.toEntity(userRequest);
 
+        if(userRequest.getCertificationNumber() == null || userRequest.getCertificationNumber().isEmpty()){
+            throw new RuntimeException("인증번호를 입력해주세요.");
+        }
+
 //        SmsCertification smsCertification = new SmsCertification(userRequest.getPhone(), userRequest.getCertificationNumber());
-//        if (!smsCertificationService.isVerify(smsCertification)) {
-//            throw new RuntimeException("SMS 인증에 실패했습니다.");
+//        if (smsCertificationService.isVerify(smsCertification)) {
+//            throw new AuthenticationNumberMismatchException("인증번호가 일치하지 않습니다.");
 //        }
         userRepository.save(NewUser);
     }
@@ -102,8 +122,8 @@ public class UserService {
         return ResponseEntity.ok(responseBody);
     }
 
-    public void withdrawal(UserRequest userRequest) {
-        var existingUser = userRepository.findByEmailAndStatus(userRequest.getEmail(), "REGISTERED");
+    public void withdrawal(long id) {
+        var existingUser = userRepository.findByIdAndStatus(id, "REGISTERED");
         if (existingUser.isPresent()) {
             User deleteUser = existingUser.get();
             deleteUser.setStatus("delete");

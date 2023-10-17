@@ -1,17 +1,22 @@
 package com.example.project02.controller;
 
+import com.example.project02.dto.AuthInfo;
 import com.example.project02.entity.User;
 import com.example.project02.dto.UserRequest;
 import com.example.project02.service.JwtTokenService;
+import com.example.project02.entity.Order;
+import com.example.project02.service.OrderService;
 import com.example.project02.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -22,6 +27,25 @@ import java.util.Objects;
 public class UserController {
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
+    private final OrderService orderService;
+
+    @GetMapping("/myPage/{id}")
+    public String myPage(@PathVariable("id") Long id, Model model) {
+        List<Order> order = orderService.findByUserId(id);
+
+        model.addAttribute("orders",order);
+        return "user/myPage";
+    }
+
+    @GetMapping("/myPage/userInfo")
+    public String userInfo() {
+        return "user/userInfo";
+    }
+
+    @GetMapping("/test")
+    public String signupTest(){
+        return "signup";
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody UserRequest userRequest) {
@@ -53,18 +77,16 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader String token) {
-        jwtTokenService.validation(token);
+    public ResponseEntity<?> logout(AuthInfo authInfo) {
+
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", "로그아웃되었습니다.");
         return ResponseEntity.status(200).body(responseBody);
     }
 
     @PatchMapping("/withdrawal")
-    public ResponseEntity<?> withdrawal(@Valid @RequestBody UserRequest userRequest) {
-        ResponseEntity<?> errorResponse = validateUser(userRequest);
-        if (errorResponse != null) return errorResponse;
-        userService.withdrawal(userRequest);
+    public ResponseEntity<?> withdrawal(AuthInfo authInfo) {
+        userService.withdrawal(authInfo.getUserId());
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", "회원 탈퇴가 성공적으로 되었습니다.");
         return ResponseEntity.status(200).body(responseBody);
