@@ -1,5 +1,6 @@
 package com.example.project02.controller;
 
+import com.example.project02.dto.AuthInfo;
 import com.example.project02.dto.SelectProductRequest;
 import com.example.project02.repository.CartRepository;
 import com.example.project02.service.OrderService;
@@ -20,10 +21,10 @@ public class OrderController {
     private final CartRepository cartRepository;
 
     @Operation(summary = "주문 요청", description = "장바구니를 조회했을 때 나오는 cartProductId를 입력, null이면 장바구니 전체 상품 주문")
-    @PostMapping("/{userId}/payments")
-    public ResponseEntity<Map<String, String>> order(@PathVariable("userId") Long userId, SelectProductRequest request) {
+    @PostMapping("/payments")
+    public ResponseEntity<Map<String, String>> order(AuthInfo authInfo, SelectProductRequest request) {
 
-       orderService.order(userId, request);
+       orderService.order(authInfo.getUserId(), request);
 
         String response = "결제 되었습니다";
 
