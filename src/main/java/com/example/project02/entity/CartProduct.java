@@ -51,5 +51,7 @@ public class CartProduct {
         price = amount * product.getPrice();
     }
 
-
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }
