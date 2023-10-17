@@ -13,7 +13,9 @@ import com.example.project02.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,9 +26,19 @@ public class CartService {
     private final CartRepository cartRepository;
     private final CartProductRepository cartProductRepository;
 
+    @Transactional(readOnly = true)
+    public List<CartProduct> allUserCartView(Cart userCart) {
+        return cartProductRepository.findByCart(userCart);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<CartProduct> findCartProductById(Long productId) {
+        return cartProductRepository.findById(productId);
+    }
+
     /**
-    * 장바구니 상품 추가
-    */
+     * 장바구니 상품 추가
+     */
     @Transactional
     public void addProduct(Long userId, CartRequest request) {
 
@@ -123,7 +135,6 @@ public class CartService {
             }
         }
 
-
         if (cartProductIdList.isEmpty()) {
             cart.getCartProducts().clear();
             cart.setTotalPrice(0);
@@ -174,8 +185,6 @@ public class CartService {
                 .collect(Collectors.toList());
 
         return new CartResponse(idUser, totalCount, totalPrice, productDtoList);
-
-
     }
 
     /**

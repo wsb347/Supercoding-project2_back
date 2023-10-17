@@ -20,12 +20,20 @@ public class Product {
     @Column(name = "product_id")
     private Long id;
 
-    @Column(name = "product_name", unique = true,length = 20)
+    @Column(name = "product_name", unique = true)
     private String name;
+
+    private double price;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    private LocalDateTime registerDate;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "field_predicted_sale_enddate",nullable = false)
+    private Date fieldPredictedSaleEnddate;
 
     private String img1;
 
@@ -33,18 +41,11 @@ public class Product {
 
     private String img3;
 
-    private double price;
 
     @Column(name = "stock_quantity")
     private Integer stockQuantity;
 
     private String productDescription;
-
-    private LocalDateTime registerDate;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "field_predicted_sale_enddate",nullable = false)
-    private Date fieldPredictedSaleEnddate;
 
     @Enumerated(EnumType.STRING)
     private ProductSerllStatus productSerllStatus; //상품 판매상태

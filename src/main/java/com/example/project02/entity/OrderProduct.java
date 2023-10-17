@@ -26,6 +26,10 @@ public class OrderProduct {
 
     private int count;
 
+    private long userId;
+
+    private String category;
+
     public static OrderProduct createOrderProduct(Product product, double productPrice, int amount) {
         OrderProduct orderProduct = new OrderProduct();
         orderProduct.setProduct(product);
