@@ -1,9 +1,9 @@
 package com.example.project02.controller;
 
-import com.example.project02.entity.Order;
 import com.example.project02.entity.User;
 import com.example.project02.dto.UserRequest;
 import com.example.project02.service.JwtTokenService;
+import com.example.project02.entity.Order;
 import com.example.project02.service.OrderService;
 import com.example.project02.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@Controller
+
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor

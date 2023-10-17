@@ -64,7 +64,7 @@ public class CartController {
         cartService.addProduct(userId, request);
 
         Product product = productRepository.findById(request.getProductId()).orElseThrow(() ->
-                new RuntimeException("등록되지 않은 상품입니다."));
+             new RuntimeException("등록되지 않은 상품입니다."));
 
         String description = String.format("%s가 %d개 장바구니에 추가되었습니다.", product.getName(), request.getQuantity());
         Map<String, String> response  = new HashMap<>();

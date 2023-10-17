@@ -29,6 +29,7 @@ public class CartProduct {
 
     private int count;
 
+
     public static CartProduct createCartProduct(Cart cart, Product product, int amount) {
         if (product.getStockQuantity() < amount) {
             throw new OutOfStockException("out of stock");

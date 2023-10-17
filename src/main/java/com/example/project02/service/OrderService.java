@@ -5,11 +5,11 @@ import com.example.project02.repository.CartRepository;
 import com.example.project02.repository.OrderProductRepository;
 import com.example.project02.repository.OrderRepository;
 import com.example.project02.repository.UserRepository;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +33,7 @@ public class OrderService {
     public void order(Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new RuntimeException("조회되지 않는 회원"));
+            new RuntimeException("조회되지 않는 회원"));
 
         List<CartProduct> cartProducts = user.getCart().getCartProducts();
 
@@ -53,9 +53,12 @@ public class OrderService {
             orderRepository.save(order);
 
             Payment.createPayment(user, order);
-        }
+            }
 
         Cart cart = cartRepository.findByUserId(userId);
         cartRepository.delete(cart);
     }
 }
+
+
+
