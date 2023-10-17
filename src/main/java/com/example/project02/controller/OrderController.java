@@ -22,7 +22,7 @@ public class OrderController {
 
     @Operation(summary = "주문 요청", description = "장바구니를 조회했을 때 나오는 cartProductId를 입력, null이면 장바구니 전체 상품 주문")
     @PostMapping("/payments")
-    public ResponseEntity<Map<String, String>> order(AuthInfo authInfo, SelectProductRequest request) {
+    public ResponseEntity<Map<String, String>> order(AuthInfo authInfo, @RequestBody SelectProductRequest request) {
 
        orderService.order(authInfo.getUserId(), request);
 

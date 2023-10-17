@@ -2,10 +2,8 @@ package com.example.project02.service;
 
 import com.example.project02.dto.SelectProductRequest;
 import com.example.project02.entity.*;
-import com.example.project02.repository.CartRepository;
-import com.example.project02.repository.OrderProductRepository;
-import com.example.project02.repository.OrderRepository;
-import com.example.project02.repository.UserRepository;
+import com.example.project02.repository.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +18,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final OrderProductRepository orderProductRepository;
+    private final CartProductRepository cartProductRepository;
 
     @Transactional
     public void order(Long userId, SelectProductRequest request) {
@@ -35,6 +34,13 @@ public class OrderService {
         }
 
         List<Long> cartProductIdList = request.getCartProductIdList();
+
+        for (Long cartProductId : cartProductIdList) {
+            CartProduct cartProduct = cartProductRepository.findByIdAndCartId(cartProductId, cart.getId());
+            if (cartProduct == null) {
+                throw new RuntimeException("조회되지 않는 id입니다.");
+            }
+        }
 
         if(cartProductIdList == null) {
             cart.getCartProducts()

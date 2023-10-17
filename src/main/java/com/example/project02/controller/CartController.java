@@ -22,7 +22,7 @@ public class CartController {
 
     @Operation(summary = "장바구니 상품 추가", description = "원하는 상품Id와 수량 입력")
     @PostMapping("/cart/products")
-    public ResponseEntity<Map<String, String>> addProductToCart(AuthInfo authInfo, @RequestBody CartRequest request) {
+    public ResponseEntity<Map<String, String>> addProductToCart(AuthInfo authInfo, @RequestBody CartRequest request){
 
         cartService.addProduct(authInfo.getUserId(), request);
 
