@@ -14,11 +14,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
+    private final UserService userService;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final OrderProductRepository orderProductRepository;
     private final CartProductRepository cartProductRepository;
+
+    public List<OrderProduct> findUserOrderProducts(Long userId) {
+        return orderProductRepository.findByUserId(userId);
+    }
+
+    public List<Order> findByUserId(Long id) {
+        return orderRepository.findByUserId(id);
+    }
 
     @Transactional
     public void order(Long userId, SelectProductRequest request) {

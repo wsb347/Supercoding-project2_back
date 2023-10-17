@@ -1,16 +1,15 @@
 package com.example.project02.service;
 
 import com.example.project02.converter.UserConverter;
-import com.example.project02.entity.User;
-import com.example.project02.dto.SmsCertification;
 import com.example.project02.dto.UserRequest;
-import com.example.project02.exception.AuthenticationNumberMismatchException;
+import com.example.project02.entity.User;
 import com.example.project02.repository.UserRepository;
 import com.example.project02.service.sms.SmsCertificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -25,6 +24,22 @@ public class UserService {
     UserConverter userConverter = new UserConverter();
     private final SmsCertificationService smsCertificationService;
 
+
+    @Transactional(readOnly = true)
+    public User findUser(Long id) {
+        User user = userRepository.findById(id).orElseGet(()->{
+            return new User();
+        });
+        return user;
+    }
+
+    public void userInfoModification(User user) {
+        User persistence =
+                userRepository.findById(user.getId()).orElseThrow(()->{
+                    return new IllegalArgumentException("회원 찾기 실패");
+                });
+
+    }
 
     public User findByEmail(String email) {
         var isUser = userRepository.findByEmail(email);
