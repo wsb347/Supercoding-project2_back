@@ -83,7 +83,7 @@ public class JwtTokenService {
                 throw new RuntimeException("잘못된 token 값입니다.");
             } else if (e instanceof ExpiredJwtException) {
                 throw new RuntimeException("token 시간이 만료되었습니다.");
-            } else throw new RuntimeException("알 수 없는 오류가 발생했습니다.");
+            } else throw new RuntimeException("알 수 없는 오류가 발생했습니다." + e.getMessage());
         }
     }
 

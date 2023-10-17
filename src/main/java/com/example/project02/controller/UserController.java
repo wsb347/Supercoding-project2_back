@@ -1,5 +1,6 @@
 package com.example.project02.controller;
 
+import com.example.project02.dto.AuthInfo;
 import com.example.project02.entity.User;
 import com.example.project02.dto.UserRequest;
 import com.example.project02.service.JwtTokenService;
@@ -58,18 +59,16 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader String token) {
-        jwtTokenService.validation(token);
+    public ResponseEntity<?> logout(AuthInfo authInfo) {
+
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", "로그아웃되었습니다.");
         return ResponseEntity.status(200).body(responseBody);
     }
 
     @PatchMapping("/withdrawal")
-    public ResponseEntity<?> withdrawal(@Valid @RequestBody UserRequest userRequest) {
-        ResponseEntity<?> errorResponse = validateUser(userRequest);
-        if (errorResponse != null) return errorResponse;
-        userService.withdrawal(userRequest);
+    public ResponseEntity<?> withdrawal(AuthInfo authInfo) {
+        userService.withdrawal(authInfo.getUserId());
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", "회원 탈퇴가 성공적으로 되었습니다.");
         return ResponseEntity.status(200).body(responseBody);

@@ -107,8 +107,8 @@ public class UserService {
         return ResponseEntity.ok(responseBody);
     }
 
-    public void withdrawal(UserRequest userRequest) {
-        var existingUser = userRepository.findByEmailAndStatus(userRequest.getEmail(), "REGISTERED");
+    public void withdrawal(long id) {
+        var existingUser = userRepository.findByIdAndStatus(id, "REGISTERED");
         if (existingUser.isPresent()) {
             User deleteUser = existingUser.get();
             deleteUser.setStatus("delete");
