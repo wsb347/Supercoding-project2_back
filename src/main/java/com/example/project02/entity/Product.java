@@ -31,7 +31,9 @@ public class Product {
 
     private LocalDateTime registerDate;
 
-    private LocalDateTime fieldPredictedSaleEndDate;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "field_predicted_sale_enddate",nullable = false)
+    private Date fieldPredictedSaleEnddate;
 
     private String img1;
 
@@ -44,10 +46,6 @@ public class Product {
     private Integer stockQuantity;
 
     private String productDescription;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "field_predicted_sale_enddate",nullable = false)
-    private Date fieldPredictedSaleEnddate;
 
     @Enumerated(EnumType.STRING)
     private ProductSerllStatus productSerllStatus; //상품 판매상태
