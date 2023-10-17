@@ -1,8 +1,10 @@
 package com.example.project02.controller;
 
-import com.example.project02.entity.Cart;
+import com.example.project02.dto.AuthInfo;
+import com.example.project02.dto.SelectProductRequest;
 import com.example.project02.repository.CartRepository;
 import com.example.project02.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,24 +20,16 @@ public class OrderController {
     private final OrderService orderService;
     private final CartRepository cartRepository;
 
-    @PostMapping("/{userId}/payments")
-    public ResponseEntity<Map<String, String>> order(@PathVariable("userId") Long userId) {
+    @Operation(summary = "주문 요청", description = "장바구니를 조회했을 때 나오는 cartProductId를 입력, null이면 장바구니 전체 상품 주문")
+    @PostMapping("/payments")
+    public ResponseEntity<Map<String, String>> order(AuthInfo authInfo, @RequestBody SelectProductRequest request) {
 
-        Cart cart = cartRepository.findByUserId(userId);
+       orderService.order(authInfo.getUserId(), request);
 
-        if (cart == null) {
-            throw new RuntimeException("장바구니에 상품을 먼저 추가해주세요");
-        }
-
-        int count = cart.getTotalCount();
-        double price = cart.getTotalPrice();
-
-        String response = String.format("총 %d개의 상품과 함께 %.1f원 결제되었습니다.", count, price);
+        String response = "결제 되었습니다";
 
         Map<String, String> message = new HashMap<>();
         message.put("message", response);
-
-        orderService.order(userId);
 
         return ResponseEntity.ok().body(message);
     }

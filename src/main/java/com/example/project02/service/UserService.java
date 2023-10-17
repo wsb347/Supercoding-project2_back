@@ -41,10 +41,10 @@ public class UserService {
             throw new RuntimeException("인증번호를 입력해주세요.");
         }
 
-        SmsCertification smsCertification = new SmsCertification(userRequest.getPhone(), userRequest.getCertificationNumber());
-        if (smsCertificationService.isVerify(smsCertification)) {
-            throw new AuthenticationNumberMismatchException("인증번호가 일치하지 않습니다.");
-        }
+//        SmsCertification smsCertification = new SmsCertification(userRequest.getPhone(), userRequest.getCertificationNumber());
+//        if (smsCertificationService.isVerify(smsCertification)) {
+//            throw new AuthenticationNumberMismatchException("인증번호가 일치하지 않습니다.");
+//        }
         userRepository.save(NewUser);
     }
 

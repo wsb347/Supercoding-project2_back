@@ -35,9 +35,6 @@ public class User {
 
     private String status;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private Cart cart;
-
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
