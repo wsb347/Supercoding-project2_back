@@ -33,4 +33,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE p.stockQuantity > :stockQuantity ORDER BY p.click ASC")
     List<Product> findByOrderByClickAsc(@Param("stockQuantity") int stockQuantity);
+
+    @Query("SELECT p FROM Product p WHERE p.name = :name")
+    List<Product> findProductByProduct_name(@Param("name") String name);
+
+    Product findByNameIgnoreCase(String name);
+
+
+    List<Product> findExpiredProductsById(Long id);
+
 }
