@@ -38,16 +38,11 @@ public class UserController {
     }
 
     @GetMapping("/myPage/userInfo")
-    public String userInfo(AuthInfo authInfo,Model model) {
+    public User userInfo(AuthInfo authInfo) {
 
         long userId = authInfo.getUserId();
 
-        User user = userService.findUser(userId);
-
-
-        model.addAttribute("user",user);
-
-        return "user/userInfo";
+        return userService.findUser(userId);
     }
 
     @GetMapping("/test")
