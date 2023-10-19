@@ -44,6 +44,14 @@ public class UserController {
 
         return ResponseEntity.ok().body(userInfo);
     }
+  
+    @GetMapping("/myPage/userInfo2")
+    public User userInfo2(AuthInfo authInfo) {
+
+        long userId = authInfo.getUserId();
+
+        return userService.findUser(userId);
+    }
 
     @GetMapping("/test")
     public String signupTest(){
