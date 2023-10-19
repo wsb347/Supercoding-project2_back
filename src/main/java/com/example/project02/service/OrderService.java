@@ -51,7 +51,7 @@ public class OrderService {
             }
         }
 
-        if(cartProductIdList == null) {
+        if(cartProductIdList.isEmpty()) {
             cart.getCartProducts()
                     .stream()
                     .map(cartProduct -> {
