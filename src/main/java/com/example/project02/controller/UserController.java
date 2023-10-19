@@ -1,6 +1,7 @@
 package com.example.project02.controller;
 
 import com.example.project02.dto.AuthInfo;
+import com.example.project02.dto.UserInfoResponse;
 import com.example.project02.entity.User;
 import com.example.project02.dto.UserRequest;
 import com.example.project02.service.JwtTokenService;
@@ -38,7 +39,14 @@ public class UserController {
     }
 
     @GetMapping("/myPage/userInfo")
-    public User userInfo(AuthInfo authInfo) {
+    public ResponseEntity<UserInfoResponse> userInfo(AuthInfo authInfo) {
+        UserInfoResponse userInfo = userService.getUserInfo(authInfo.getUserId());
+
+        return ResponseEntity.ok().body(userInfo);
+    }
+  
+    @GetMapping("/myPage/userInfo2")
+    public User userInfo2(AuthInfo authInfo) {
 
         long userId = authInfo.getUserId();
 
@@ -109,5 +117,10 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
         }
         return null;
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,21 +1,20 @@
 package com.example.project02.service;
 
 import com.example.project02.converter.UserConverter;
+import com.example.project02.dto.OrderResponse;
+import com.example.project02.dto.UserInfoResponse;
 import com.example.project02.dto.UserRequest;
 import com.example.project02.entity.User;
-import com.example.project02.repository.UserRepository;
+import com.example.project02.repository.*;
 import com.example.project02.service.sms.SmsCertificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +22,8 @@ public class UserService {
     private final UserRepository userRepository;
     UserConverter userConverter = new UserConverter();
     private final SmsCertificationService smsCertificationService;
-
+    private final CartRepository cartRepository;
+    private final OrderRepository orderRepository;
 
     @Transactional(readOnly = true)
     public User findUser(Long id) {
@@ -129,5 +129,24 @@ public class UserService {
             deleteUser.setStatus("delete");
             userRepository.save(deleteUser);
         }
+    }
+
+    public UserInfoResponse getUserInfo(Long userId) {
+
+        Optional<User> user = Optional.ofNullable(userRepository.findById(userId).orElseThrow(() ->
+                new RuntimeException("유저 없음")));
+
+
+        if (user.isPresent()) {
+            String name = user.get().getName();
+            String email = user.get().getEmail();
+            String address = user.get().getAddress();
+            String phoneNumber = user.get().getPhone();
+
+            List<OrderResponse> orderDetailByUserId = orderRepository.findOrderDetailByUserId(userId);
+
+            return new UserInfoResponse(name, email, address, phoneNumber, orderDetailByUserId);
+
+        } else throw new RuntimeException("신규 회원이면 장바구니 조회 안됨. 상품추가 후 조회가능");
     }
 }
